@@ -21,6 +21,13 @@ public class EnemyIdle : IEnemyState
 	{
 		Debug.Log("Idle...");
 
+		// 시야 내에 플레이어가 있을 경우 추격 상태로 변경
+		if(p_enemy.GetComponent<EnemySight>().IsPlayerInRange())
+		{
+			p_enemy.ChangeState(EnemyState.CHASE);
+			return;
+		}
+
 		_timer += Time.deltaTime;
 		if(_timer >= _idleTime)
 		{

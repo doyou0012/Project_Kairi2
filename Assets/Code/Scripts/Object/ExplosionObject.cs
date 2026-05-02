@@ -24,7 +24,7 @@ public class ExplosionObject : MonoBehaviour, IInteractionObject
 
 		foreach (var hit in hits)
 		{
-			if (hit.CompareTag(TagName.enemy) || hit.CompareTag(TagName.throwingEnemy))
+			if (hit.CompareTag(TagName.enemy))
 			{
 				if (hit.TryGetComponent<Enemy>(out var target))
 				{

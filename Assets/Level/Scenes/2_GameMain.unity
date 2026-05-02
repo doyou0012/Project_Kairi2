@@ -30452,7 +30452,8 @@ GameObject:
   - component: {fileID: 602039921}
   - component: {fileID: 602039922}
   - component: {fileID: 602039920}
-  m_Layer: 0
+  - component: {fileID: 602039925}
+  m_Layer: 8
   m_Name: Enemy1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -30527,7 +30528,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 690d306acfd82be4fb59af4a283be4b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 3.375, y: 3.375}
@@ -30605,7 +30606,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -30650,18 +30651,30 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 5
+  m_CollisionDetection: 1
+  m_Constraints: 4
+--- !u!114 &602039925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602039916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef61426651795149b80e1a013a2a9d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -30836,10 +30849,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolManager: {fileID: 390420845}
+  cameraShake: {fileID: 1733954251}
   playerObj: {fileID: 58512539}
   playerController: {fileID: 0}
   playerStats: {fileID: 11400000, guid: 04651e9e4914112429578273ebb61200, type: 2}
-  enemyStats: {fileID: 0}
   playerStatsRuntime:
     speed: 0
     jumpForce: 0
@@ -30925,6 +30938,7 @@ GameObject:
   - component: {fileID: 1733954250}
   - component: {fileID: 1733954249}
   - component: {fileID: 1733954248}
+  - component: {fileID: 1733954251}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -31086,6 +31100,21 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 4.1, z: -10}
+--- !u!114 &1733954251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733954245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eeb105b3a0608247b105c8b6b99dce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impulseSource: {fileID: 1733954248}
+  magnitude: 0.05
+  roughness: 0.05
 --- !u!1 &1873965441
 GameObject:
   m_ObjectHideFlags: 0

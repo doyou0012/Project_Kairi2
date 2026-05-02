@@ -10,19 +10,26 @@ public class EnemyPatrol : IEnemyState
 
 	public void EnterState(Enemy p_enemy)
 	{
+		Debug.Log($"Enter Patrol");
+
 		p_enemy.GetComponent<Animator>().Play(EnemyAnimName.Patrol);	// 애니메이션 지정
 		_isPatrolling = false;
 		_moveTimer = 0f;
 		_moveTime = Random.Range(2f, 3f);   // 움직일 시간 랜덤 지정
-
-		Debug.Log($"Enter Patrol (moveTime: {_moveTime})");
 	}
 
 	public void UpdateState(Enemy p_enemy)
 	{
 		Debug.Log("Patroling...");
 
-		if(!_isPatrolling)	// 추적 중인 경우
+		// 시야 내에 플레이어가 있을 경우 추격 상태로 변경
+		if (p_enemy.GetComponent<EnemySight>().IsPlayerInRange())
+		{
+			p_enemy.ChangeState(EnemyState.CHASE);
+			return;
+		}
+
+		if (!_isPatrolling)	// 추적 중인 경우
 		{
 			p_enemy.GetComponent<ObjectFlip>().Flip();
 			_isPatrolling = true;

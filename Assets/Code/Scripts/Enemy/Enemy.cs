@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-	public Rigidbody2D _rb;
+	[HideInInspector] public Rigidbody2D _rb;
 	public Dictionary<EnemyState, IEnemyState> _stateList;
 	private EnemyState _enemyState;
 
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour, IDamageable
 		_stateList = new Dictionary<EnemyState, IEnemyState>();
 		_stateList[EnemyState.IDLE] = new EnemyIdle();
 		_stateList[EnemyState.CHASE] = new EnemyChase();
-		_stateList[EnemyState.ATTACK] = new EnemyAttack();
+		_stateList[EnemyState.ATTACK] = new EnemyLongRangeAttack();
 		_stateList[EnemyState.PATROL] = new EnemyPatrol();
 
 		_enemyState = EnemyState.IDLE;
@@ -45,14 +45,6 @@ public class Enemy : MonoBehaviour, IDamageable
 		_stateList[_enemyState]?.ExitState(this);
 		_enemyState = p_state;
 		_stateList[_enemyState].EnterState(this);
-	}
-
-	public void ChangStateDebug(EnemyState p_state)
-	{
-		if (Input.GetKeyDown(KeyCode.Tab))
-		{
-			ChangeState(p_state);
-		}
 	}
 
 	// 인터페이스 상속

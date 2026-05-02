@@ -3,7 +3,6 @@ using Globals;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using EnumType;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -30,11 +29,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 땅 체크
 	[SerializeField] private Transform groundCheckObj;      // 땅 체크 오브젝트 (프리펩)
 	public float checkRadius = 0.1f;    // 땅 체크 반지름
-	LayerMask groundMask;
-	LayerMask groundSpecialMask;
-
-	// 코루틴
-	private Coroutine playerDashCoroutine;  // 플레이어 대쉬
+	private LayerMask groundMask;
+	private LayerMask oneWayPlatformMask;
 
 	/// <summary>
 	/// Init
@@ -44,7 +40,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 		rigid = GetComponent<Rigidbody2D>();
 		sprite = GetComponent<SpriteRenderer>();
 		groundMask = LayerMask.GetMask(TagName.ground);
-		groundSpecialMask = LayerMask.GetMask(TagName.groundSpecial);
+		oneWayPlatformMask = LayerMask.GetMask(TagName.groundSpecial);
 		animator = GetComponent<Animator>();
 	}
 
@@ -116,7 +112,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void GroundCheck()
 	{
 		isGrounded = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius);
-		isGroundedSpecial = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, groundSpecialMask);
+		isGroundedSpecial = Physics2D.OverlapCircle(groundCheckObj.position, checkRadius, oneWayPlatformMask);
 	}
 
 	/// <summary>
@@ -162,7 +158,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 				item.GetComponent<Enemy>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
 			else if (item.CompareTag(TagName.crackObj))     // 부서지는 오브젝트
 				item.GetComponent<ObjectController>().count -= GameManager.Instance.playerStatsRuntime.attack;
-			Debug.Log(item.tag);				
+			GameManager.Instance.cameraShake.ShakeForSeconds(1f);     // 카메라 쉐이킹
+			Debug.Log($"broken {item.tag}");
 		}
 		StartCoroutine(PlayerAttack());
 	}
@@ -193,7 +190,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	IEnumerator PlayerAttack()	// 플레이어 공격
 	{
 		// 공격
-		animator.SetTrigger("Attack");
+		animator.Play(PlayerAnimName.Attack);	// 애니메이션 실행
 		isAttack = true;
 
 		// 쿨타임 대기

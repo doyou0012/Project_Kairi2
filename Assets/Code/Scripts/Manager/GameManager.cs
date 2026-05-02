@@ -4,8 +4,11 @@ public class GameManager : MonoSingleton<GameManager>
 {
 	private static GameManager mngInstance = null;
 
-	[Header("Manager 스크립트")]
+	[Header("Manager")]
 	public PoolManager poolManager;
+
+	[Header("Camera")]
+	public CameraShake cameraShake;
 
 	[Header("플레이어 정보")]
 	public GameObject playerObj;
@@ -13,7 +16,6 @@ public class GameManager : MonoSingleton<GameManager>
 
 	[Header("스탯")]
 	public PlayerStats playerStats;
-	public EnemyStats enemyStats;
 
 	[Header("게임 실행 중 플레이어 스탯값 수정")]
 	public PlayerStatsRuntime playerStatsRuntime;

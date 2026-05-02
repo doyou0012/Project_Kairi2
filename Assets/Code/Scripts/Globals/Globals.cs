@@ -11,11 +11,9 @@ namespace Globals
 	{
 		// 적
 		public static readonly string enemy = "Enemy";
-		public static readonly string throwingEnemy = "ThrowingEnemy";
 		public static readonly string bullet = "Bullet";
 		// 오브젝트
 		public static readonly string obj = "NormalObject";
-		public static readonly string throwingObj = "ThrowingObject";
 		public static readonly string crackObj = "CrackObject";
 		public static readonly string expObj = "ExplosionObject";
 		// 플레이어 관련
@@ -29,6 +27,12 @@ namespace Globals
 		public static readonly string npc = "NPC";
 		// 카메라
 		public static readonly string cameraBound = "CameraBound";
+	}
+
+	public static class LayerName
+	{
+		public static readonly string player = "Player";
+		public static readonly string enemy = "Enemy";
 	}
 
 	// 적 관련 데이터
@@ -46,5 +50,12 @@ namespace Globals
 		public static readonly string Chase = "Enemy_Run";
 		public static readonly string Attack = "Enemy_Shot1";
 		public static readonly string Patrol = "Enemy_Walk";
+		public static readonly string Recharge = "Enemy_Recharge";
+	}
+	public static class PlayerAnimName   // 플레이어
+	{
+		public static readonly string Idle = "Idle";
+		public static readonly string Chase = "Run";
+		public static readonly string Attack = "Attack";
 	}
 }

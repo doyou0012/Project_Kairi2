@@ -7,9 +7,7 @@ TagManager:
   - Ground
   - ExplosionObject
   - NormalObject
-  - ThrowingObject
   - Enemy
-  - ThrowingEnemy
   - Platform
   - OneWayPlatform
   - CrackObject
@@ -21,8 +19,8 @@ TagManager:
   - Water
   - UI
   - OneWayPlatform
-  - 
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

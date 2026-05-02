@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10.5
   jumpForce: 15
-  attack: 999
+  attack: 1
   attackCoolTime: 0.5
-  maxHP: 5
+  maxHP: 1
   dashSpeed: 30
   dashDuration: 0.1
   invincibilityDuration: 0.2

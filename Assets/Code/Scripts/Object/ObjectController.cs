@@ -117,7 +117,7 @@ public class ObjectController : MonoBehaviour
 	{
 		CheckGround(collision);     // ¹Ù´Ú Ã¼Å©
 
-		if (gameObject.CompareTag(tagName.throwingObj) && collision.gameObject.CompareTag(tagName.enemy))
+		if (collision.gameObject.CompareTag(tagName.enemy))
 		{
 			if (collision.gameObject.TryGetComponent<Enemy>(out var target))
 			{
@@ -131,7 +131,7 @@ public class ObjectController : MonoBehaviour
 			}
 		}
 
-		if (CompareTag(tagName.throwingObj) && explosionObject && collision.gameObject.CompareTag(tagName.enemy))
+		if (explosionObject && collision.gameObject.CompareTag(tagName.enemy))
 		{
 			if (collision.gameObject.TryGetComponent<Enemy>(out var target))
 			{
