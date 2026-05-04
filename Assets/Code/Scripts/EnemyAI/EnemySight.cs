@@ -28,8 +28,6 @@ public class EnemySight : MonoBehaviour
 		float forward = -Mathf.Sign(transform.localScale.x);
 		bool isFacing = dx * forward > 0f;
 
-		Debug.Log($"col: {col}");
-
 		return (col != null && col.CompareTag(TagName.player)) || (isFacing && hit.transform.CompareTag(TagName.player));
 	}
 

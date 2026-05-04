@@ -1,19 +1,16 @@
 ﻿using EnumType;
 using Globals;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-enum DashType { NONE = 0, NORMAL, READY, DOWN }
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
 	// 플레이어 정보
 	private Rigidbody2D rigid;
-	private SpriteRenderer sprite;
 	private bool isGrounded;    // 땅 여부
 	private bool isGroundedSpecial;     // 떨어질 수 있는 땅
-	private bool isDash;        // 대쉬 사용 여부
 	private bool isAttack;      // 공격 여부
 	float originalGravity;
 
@@ -23,12 +20,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 	// 이동
 	private Vector2 inputVec;   // 입력된 플레이어 이동값 (-1, 0, 1)
 	private float speed;        // 플레이어 이동 속도
+
+	// 대쉬
 	private float dashTime;     // 대쉬 지속 시간
+	private bool isDash;        // 대쉬 사용 여부
+	private bool isDashReady;	// 대쉬 준비
+	private bool canDash;       // 대쉬 사용 가능 여부 (쿨타임 지났을 때)
+	private Vector2 dashDir;	// 대쉬 방향
 
 	// 땅 체크
 	[SerializeField] private Transform groundCheckObj;      // 땅 체크 오브젝트 (프리펩)
 	public float checkRadius = 0.1f;    // 땅 체크 반지름
-	private LayerMask groundMask;
 	private LayerMask oneWayPlatformMask;
 
 	// 마우스 입력
@@ -40,8 +42,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
-		sprite = GetComponent<SpriteRenderer>();
-		groundMask = LayerMask.GetMask(TagName.ground);
 		oneWayPlatformMask = LayerMask.GetMask(TagName.oneWayPlatform);
 		animator = GetComponent<Animator>();
 	}
@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isGrounded = true;
 		isGroundedSpecial = false;
 		isDash = false;
+		isDashReady = false;
+		canDash = true;
 		isAttack = false;
 		speed = GameManager.Instance.playerStatsRuntime.speed;
 		originalGravity = rigid.gravityScale;
@@ -61,6 +63,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// </summary>
 	private void FixedUpdate()
 	{
+		UpdateDash();	// 대쉬
+	}
+
+	private void Update()
+	{
+		if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
+			rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+		else    // 좌우 이동이 있을 경우
+			rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+		rigid.gravityScale = originalGravity;
+	}
+
+	// 플레이어 대쉬
+	private void UpdateDash()
+	{
 		if (dashTime <= 0)
 		{
 			speed = GameManager.Instance.playerStatsRuntime.speed;
@@ -70,31 +88,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 		else
 		{
 			dashTime -= Time.deltaTime;
-			speed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+			speed = GameManager.Instance.playerStatsRuntime.dashDist;
 		}
 		isDash = false;
 
 		if (!isDash)
 			rigid.linearVelocity = new Vector2(inputVec.x * speed, rigid.linearVelocityY);
-		UpdateSprite();     // 좌우 플립
-	}
-
-	private void Update()
-	{
-		if (inputVec.x == 0)        // 좌우 이동 입력이 없을 경우
-			rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-		else    // 좌우 이동이 있을 경우
-			rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-		rigid.gravityScale = originalGravity;
+		UpdateSprite(inputVec);     // 좌우 플립
 	}
 
 	// 플레이어 스프라이트 업데이트
-	private void UpdateSprite()
+	private void UpdateSprite(Vector2 target)
 	{
 		// 좌우 플립
-		if (inputVec.x > 0)
+		if (target.x > 0)
 			transform.eulerAngles = new Vector2(0f, 0f);
-		else if (inputVec.x < 0)
+		else if (target.x < 0)
 			transform.eulerAngles = new Vector2(0f, 180f);
 	}
 
@@ -137,23 +146,25 @@ public class PlayerController : MonoBehaviour, IDamageable
 		isGrounded = false;
 	}
 
-	private void OnCrouch(InputValue val)
+	private void OnCrouch(InputValue val)	// 대쉬/내려가기 (S)
 	{
-		if (isDash) return;
+		isDashReady = true;
 
 		if (isGroundedSpecial)
 		{
 			transform.position += Vector3.down * 0.1f;
 		}
-		else if (isGrounded)
+		else if (canDash)
 		{
-			Vector2 dir = inputVec;
+			isDash = true;
+			canDash = false;
+			dashDir = inputVec;
 
-			// 입력 없으면 바라보는 방향으로 대쉬
-			if (dir == Vector2.zero)
-				dir = transform.eulerAngles.y == 0 ? Vector2.right : Vector2.left;
+			//// 입력 없으면 바라보는 방향으로 대쉬
+			//if (dir == Vector2.zero)
+			//	dir = transform.eulerAngles.y == 0 ? Vector2.right : Vector2.left;
 
-			StartCoroutine(PlayerDash(dir));
+			StartCoroutine(PlayerDash());
 		}
 	}
 
@@ -183,21 +194,21 @@ public class PlayerController : MonoBehaviour, IDamageable
 	/// <summary>
 	/// Coroutine
 	/// </summary>
-	private IEnumerator PlayerDash(Vector2 dir)
+	private IEnumerator PlayerDash()
 	{
 		isDash = true;
 
 		float originalGravity = rigid.gravityScale;
 		rigid.gravityScale = 0f;
 
-		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashDist;
 		float dashDuration = GameManager.Instance.playerStatsRuntime.dashDuration;
 
 		float time = 0f;
 
 		while (time < dashDuration)
 		{
-			rigid.linearVelocity = dir * dashSpeed;
+			rigid.linearVelocity = dashDir * dashSpeed;
 			time += Time.deltaTime;
 			yield return null;
 		}
@@ -208,19 +219,18 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	IEnumerator PlayerAttack(Vector2 target)
 	{
-		animator.Play(PlayerAnimName.Attack);
+		animator.Play(PlayerAnimName.attack);
 		isDash = true;
 		isAttack = true;
 
-		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashSpeed;
+		float dashSpeed = GameManager.Instance.playerStatsRuntime.dashDist;
 		float dashDuration = GameManager.Instance.playerStatsRuntime.dashDuration;
 
 		Vector2 startPos = transform.position;
 		Vector2 dir = (target - (Vector2)transform.position).normalized;
+		UpdateSprite(dir);     // 좌우 플립
 
 		rigid.gravityScale = 0f;    // 중력 0으로
-
-		transform.localScale = new Vector3(((dir.x < 0) ? -1 : 1), 1, 1);
 
 		float dashDistance = dashSpeed * dashDuration;      // 대쉬 거리
 		Vector2 endPos = startPos + dir * dashDistance;     // 목표 위치 (기본값)
@@ -244,13 +254,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 			// 공격 범위가 벽을 넘었을 경우
 			if (hit.transform.CompareTag(TagName.ground))
 				endPos = startPos + dir * (hit.distance - 0.1f);    // 벽 바로 앞에서 멈춤
-			// 부서지는 오브젝트인 경우
-			if(hit.transform.CompareTag(TagName.crackObj) || hit.transform.CompareTag(TagName.enemy))
-			{
-				endPos = startPos + dir * GameManager.Instance.playerStatsRuntime.attackDist;
-				hit.transform.GetComponent<IDamageable>().TakeDamage(GameManager.Instance.playerStatsRuntime.attack);	// 데미지 주기
-			}
 
+			// 부서지는 오브젝트 또는 적일 경우
+			if (hit.transform.CompareTag(TagName.crackObj) || hit.transform.CompareTag(TagName.enemy))
+			{
+				IDamageable damage = hit.transform.GetComponent<IDamageable>();		// 데미지 입는 오브젝트인지 확인
+				if (damage != null)
+				{
+					damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack);  // 데미지 주기
+					endPos = startPos + dir * GameManager.Instance.playerStatsRuntime.attackDist;
+				}
+			}
 		}
 
 		while (time < dashDuration)
@@ -280,6 +294,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)     // 체력이 0 이하일 때
 		{
+			Debug.Log("플레이어 사망");
 			return;
 		}
 	}
