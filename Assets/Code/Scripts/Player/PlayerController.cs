@@ -46,12 +46,21 @@ public class PlayerController : MonoBehaviour
 	// Input System 콜백
 	private void OnMove(InputValue val)
 	{
+		if (dash.isDashing)
+		{
+			movement.inputVec = Vector2.zero;
+			return;
+		}
 		movement.inputVec = val.Get<Vector2>();
 		animator.Play(PlayerAnimName.run);
 		dash.TryDash();
 	}
 
-	private void OnReleaseMove(InputValue val) => animator.Play(PlayerAnimName.idle);
+	private void OnReleaseMove(InputValue val)
+	{
+		if (dash.isDashing) return;
+		animator.Play(PlayerAnimName.idle);
+	}
 
 	private void OnJump(InputValue val)
 	{
@@ -66,11 +75,13 @@ public class PlayerController : MonoBehaviour
 		animator.Play(PlayerAnimName.landDown);
 		if (groundChecker.isGroundedSpecial)
 			transform.position += Vector3.down * 0.1f;
-		dash.TryDash();
+		else
+			dash.TryDash();
 	}
 
 	private void OnReleaseCrouch()
 	{
+		if (dash.isDashing) return;
 		dash.isDashReady = false;
 		animator.Play(PlayerAnimName.landUp);
 	}
