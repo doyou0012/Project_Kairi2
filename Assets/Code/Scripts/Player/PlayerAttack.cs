@@ -63,6 +63,11 @@ public class PlayerAttack : MonoBehaviour
 				hit.transform.GetComponent<IDamageable>()?.TakeDamage(stats.attack);
 				endPos = startPos + dir * (dist + stats.attackDist);
 			}
+			else if (hit.transform.CompareTag(TagName.bullet))
+			{
+				hit.transform.GetComponent<EnemyBullet>()?.DeflectBullet();
+				endPos = startPos;
+			}
 		}
 
 		float time = 0f;
