@@ -32,6 +32,7 @@ public class PlayerDash : MonoBehaviour
 		isDashing = true;
 		originalGravity = rigid.gravityScale;
 		rigid.gravityScale = 0f;
+		animator.Play(PlayerAnimName.slide);
 
 		var stats = GameManager.Instance.playerStatsRuntime;
 		float time = 0f;

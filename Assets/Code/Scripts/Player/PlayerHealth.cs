@@ -27,20 +27,22 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
-			StartCoroutine(DieRoutine());
+			StartCoroutine(PlayerDie());
 	}
 
-	private IEnumerator DieRoutine()
+	private IEnumerator PlayerDie()
 	{
-		if (!glitchGlobalVolume || !tvGlobalVolume) yield break;
+		if (glitchGlobalVolume && tvGlobalVolume)
+		{
+			glitchGlobalVolume.SetActive(true);
+			tvGlobalVolume.SetActive(true);
+			yield return new WaitForSeconds(0.5f);
+			blackCanvas.gameObject.SetActive(true);
+			GameManager.Instance.sceneReloader.SetAlpha(1f);
+			yield return new WaitForSeconds(0.5f);
+			Respawn();
+		}
 
-		glitchGlobalVolume.SetActive(true);
-		tvGlobalVolume.SetActive(true);
-		yield return new WaitForSeconds(0.5f);
-		blackCanvas.gameObject.SetActive(true);
-		GameManager.Instance.sceneReloader.SetAlpha(1f);
-		yield return new WaitForSeconds(0.5f);
-		Respawn();
 	}
 
 	private void Respawn()
