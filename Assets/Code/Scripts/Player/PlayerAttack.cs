@@ -47,11 +47,39 @@ public class PlayerAttack : MonoBehaviour
 			mask
 		);
 
+		isAttack = true;
+
 		if (hit)
-			targetPos = startPos + dir * hit.distance;
+		{
+			Collider2D hitCol = hit.collider;
+			if(hitCol.CompareTag(TagName.enemy) 
+			|| hitCol.CompareTag(TagName.crackObj))
+			{
+				if(hitCol.TryGetComponent<IDamageable>(out IDamageable coll))
+				{
+					coll.TakeDamage(stats.attack);  // 공격력만큼 데미지 주기
+					targetPos = startPos;
+					// TODO: 공격 이펙트
+					print($"Attack to {hit.collider.tag}");
+				}
+			}
+			else if(hitCol.CompareTag(TagName.door))
+			{
+				hit.transform.GetComponent<IInteractionObject>()?.OnInteract();
+				print($"Interact {hit.collider.tag}");
+			}
+			else if (hitCol.CompareTag(TagName.bullet))
+			{
+				// TODO: 총알 패링
+				print($"Parrying");
+			}
+			else
+				targetPos = startPos + dir * hit.distance;
+		}
 
 		// 공격 거리만큼 대쉬
-		while (Vector2.Distance(transform.position, targetPos) > 0.1f)
+		while (Vector2.Distance(transform.position, targetPos) > 0.1f
+			&& stats.attackDuration > attackTimer)
 		{
 			attackTimer += Time.deltaTime;
 			float t = attackTimer;
@@ -68,9 +96,11 @@ public class PlayerAttack : MonoBehaviour
 		float maxDistance = 100f;
 
 		RaycastHit2D hit;
-		LayerMask mask = ~LayerMask.GetMask(LayerName.player);
-		Vector2 dir = transform.right;
-		//Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
+
+		Vector2 startPos = transform.position;
+		Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform);
+		Vector2 dir = (mousePos - startPos).normalized;
 		Vector2 boxSize = GetComponent<BoxCollider2D>().size;
 
 		// BoxCast

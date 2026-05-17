@@ -57,7 +57,7 @@ public class Silhouette : MonoBehaviour
 		}
 	}
 
-	void DefaultSet()
+	public void DefaultSet()
 	{
 		delta = 0;
 		Limit = 0;

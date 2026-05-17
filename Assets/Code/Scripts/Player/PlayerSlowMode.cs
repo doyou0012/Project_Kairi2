@@ -96,6 +96,7 @@ public class PlayerSlowMode : MonoBehaviour
 		if (bloom != null)
 			bloom.intensity.value = 0.8f;
 		mixer.SetFloat("MasterCutoff", 22000f); // 원래 소리
+		solihoutte.DefaultSet();		// 실루엣 기본상태로 변경
 	}
 
 	//void UpdateSlowGauge()      // 슬로우 게이지 업데이트

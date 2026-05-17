@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D col)
 	{
-		//if (attack.CanDeflect() && col.CompareTag(TagName.bullet))
+		if (/*attack.CanDeflect() && */col.CompareTag(TagName.bullet))
 			col.GetComponent<EnemyBullet>().DeflectBullet();
 	}
 }

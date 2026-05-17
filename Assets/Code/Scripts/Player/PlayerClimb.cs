@@ -77,10 +77,13 @@ public class PlayerClimb : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.color = Color.blue;
-		Gizmos.DrawRay(
-			wallChk.position, 
-			Vector2.right * isRight * playerStats.wallChkDist
-		);
+		if(wallChk != null)
+		{
+			Gizmos.color = Color.blue;
+			Gizmos.DrawRay(
+				wallChk.position, 
+				Vector2.right * isRight * playerStats.wallChkDist
+			);
+		}
 	}
 }

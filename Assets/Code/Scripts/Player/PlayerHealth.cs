@@ -24,6 +24,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
 	public void TakeDamage(int attack)
 	{
+		return;		// DEBUG
 		if (dash.isDashing) return;  // 대쉬 중 무적
 
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;

@@ -15,7 +15,7 @@ MonoBehaviour:
   speed: 10.5
   jumpForce: 12
   attack: 1
-  attackDuration: 0.2
+  attackDuration: 0.3
   attackDist: 4
   attackCoolTime: 0.5
   attackSpeed: 7
