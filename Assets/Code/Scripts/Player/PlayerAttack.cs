@@ -8,7 +8,7 @@ public class PlayerAttack : MonoBehaviour
 	private Rigidbody2D rigid;
 	private PlayerStatsRuntime stats;
 	private Camera mainCam;
-	private Tweener tr;
+	private PlayerSlowMode slowMode;
 	private float attackTimer;
 
 	public bool isAttack;
@@ -16,7 +16,9 @@ public class PlayerAttack : MonoBehaviour
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
-	}
+		slowMode = GetComponent<PlayerSlowMode>();
+
+    }
 
     private void Start()
     {
@@ -50,6 +52,8 @@ public class PlayerAttack : MonoBehaviour
 
 		isAttack = true;
 
+		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있다가 
+
 		if (hit)
 		{
 			Collider2D hitCol = hit.collider;
@@ -59,7 +63,7 @@ public class PlayerAttack : MonoBehaviour
 				if(hitCol.TryGetComponent<IDamageable>(out IDamageable coll))
 				{
 					coll.TakeDamage(stats.attack);  // 공격력만큼 데미지 주기
-					targetPos = startPos;
+					
 					// TODO: 공격 이펙트
 					print($"Attack to {hit.collider.tag}");
 				}
@@ -72,7 +76,10 @@ public class PlayerAttack : MonoBehaviour
 			else if (hitCol.CompareTag(TagName.bullet))
 			{
 				// TODO: 총알 패링
-				print($"Parrying");
+				if(hit.transform.TryGetComponent<EnemyBullet>(out var bullet))
+				{
+					bullet.DeflectBullet();		// 패링
+				}
 			}
 			else
 				targetPos = startPos + dir * hit.distance;
@@ -87,13 +94,13 @@ public class PlayerAttack : MonoBehaviour
 		//	transform.position = Vector3.Lerp(transform.position, targetPos, t);
 		//	yield return null;	// 다음 프레임까지 대기
 		//}
-		transform.DOMove(targetPos, stats.attackDuration);
+		//transform.DOMove(targetPos, stats.attackDuration);
 
 		yield return new WaitForSeconds(stats.attackCoolTime);
 		attackTimer = 0f;
 	}
 
-	private void OnDrawGizmos()
+    private void OnDrawGizmos()
 	{
 		float maxDistance = 100f;
 
