@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db78c73a57a364c43bfdcc0e3f3b4086, type: 3}
-  m_Name: KimEnemyStats
+  m_Name: KimEnemyStats_Melee
   m_EditorClassIdentifier: Assembly-CSharp::KimEnemyStats
   EnemyName: Enemy
   EnemyDescription: "\uAE30\uBCF8 \uBAAC\uC2A4\uD130(\uADFC)"
@@ -18,10 +18,10 @@ MonoBehaviour:
   PatrolSpeed: 1.5
   ChaseSpeed: 8
   SightRoundRange: 2
-  SightRange: 10
+  SightRange: 5
   FindCoolTime: 1
   Attack: 1
   AttackRange: 2
   HP: 1
-  SightAngle: 60
+  SightAngle: 25
   SightHeightLimit: 1.5

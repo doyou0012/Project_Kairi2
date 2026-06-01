@@ -24,7 +24,9 @@ public class Test_KatanaAttack : MonoBehaviour
     [SerializeField] private float attackRadius = 1.8f;
     [Tooltip("한 대 때릴 때마다 적의 피를 얼마나 깎을지 결정하는 공격 대미지")]
     [SerializeField] private int attackDamage = 1;
-
+    [Header("패링 설정")]
+    [Tooltip("에너미 총알(Bullet) 오브젝트들이 속한 레이어 마스크를 등록합니다.")]
+    [SerializeField] private LayerMask bulletLayer;
     private float lastAttackTime; // 마지막으로 공격한 시간 기록 장치 (연타 방지용)
     private Animator anim;        // 캐릭터 팔다리 모션을 바꿀 애니메이터 컴포넌트
 
@@ -137,6 +139,27 @@ public class Test_KatanaAttack : MonoBehaviour
                 Debug.Log($"[물리 전투 타격] 적 스캔 완료! 대상: {enemyCollider.name}, 가한 대미지: {attackDamage}");
             }
         }
+        // ----------------- [2. 신규 적 총알 패링 판정 영역 - 방법 B] -----------------
+        // 칼을 휘두른 반경(attackRadius) 내부에서 지정한 bulletLayer에 속한 콜라이더를 몽땅 긁어모읍니다.
+        Collider2D[] hitBullets = Physics2D.OverlapCircleAll(spawnPosition, attackRadius, bulletLayer);
+        foreach (Collider2D bulletCollider in hitBullets)
+        {
+            // 감지된 탄환에서 탄환 물리 컴포넌트를 조작합니다.
+            KimEnemyBullet bullet = bulletCollider.GetComponent<KimEnemyBullet>();
+            if (bullet != null)
+            {
+                // 현재 마우스 월드 좌표(크로스헤어 방향)를 추출합니다.
+                Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mouseWorldPosition.z = 0f;
+                // 해당 총알에 튕겨 날아갈 타겟 위치 좌표를 넘겨 물리 비행 궤적을 튕겨냅니다.
+                bullet.Deflect(mouseWorldPosition);
+                // 통쾌한 패링 손맛(역경직 / HitStop)을 화면 전체에 유도합니다.
+                TriggerParryEffects();
+            }
+        }
+
+
+
     }
 
     private void ResetAttackState()
@@ -169,4 +192,26 @@ public class Test_KatanaAttack : MonoBehaviour
 
         Gizmos.DrawWireSphere(drawPosition, attackRadius);
     }
+
+    /// <summary>
+    /// 패링에 완벽히 성공했을 때 시간 왜곡(HitStop)을 부여하여 손맛을 극대화하는 기법입니다.
+    /// </summary>
+    private void TriggerParryEffects()
+    {
+        // 0.07초 동안 현실 시간을 제외한 전체 게임 타임 스케일을 거의 일시 정지 수준으로 만듭니다.
+        StartCoroutine(HitStopCoroutine(0.07f));
+    }
+    private System.Collections.IEnumerator HitStopCoroutine(float duration)
+    {
+        float originalTimeScale = Time.timeScale;
+
+        // 1. 게임 전역 속도를 1/20 수준으로 급감시킵니다.
+        Time.timeScale = 0.05f;
+        // 2. 중요: Time.timeScale의 영향을 받지 않는 절대적 현실 대기 수단인 WaitForSecondsRealtime을 사용합니다.
+        yield return new WaitForSecondsRealtime(duration);
+        // 3. 대기 완료 후 게임 속도를 원래의 정상 속도(1.0)로 복원합니다.
+        Time.timeScale = originalTimeScale;
+    }
+
+
 }

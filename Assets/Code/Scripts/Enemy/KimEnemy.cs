@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
+
+
+
+
+
 /// <summary>
 /// [Kim 에너미 본체 스크립트]
 /// FSM 상태 머신을 구동하고, 체력 정보와 물리 컴포넌트를 지니며,
@@ -28,6 +33,17 @@ public class KimEnemy : MonoBehaviour, IDamageable
     // 실시간으로 변동하는 현재 체력 수치입니다. 다른 클래스에서 접근할 수 있도록 public으로 두되,
     // 인스펙터 창이 지저분해지거나 에셋 밸런스 설정과 혼동되는 것을 방지하기 위해 [HideInInspector]로 숨겨둡니다.
     [HideInInspector] public int currentHP;
+
+    // KimEnemy.cs 상단 필드 선언부에 추가할 내용
+    [Header("원거리 공격 설정")]
+    [Tooltip("체크하면 원거리 공격 상태(KimEnemyRangedAttack)를 사용합니다.")]
+    public bool isRanged = false;
+    [Tooltip("발사할 총알 프리팹을 등록합니다.")]
+    public GameObject bulletPrefab;
+    [Tooltip("총알이 생성되어 날아갈 발사구 위치 오브젝트를 등록합니다.")]
+    public Transform firePoint;
+
+
 
     private void Awake()
     {
@@ -64,16 +80,23 @@ public class KimEnemy : MonoBehaviour, IDamageable
     /// <summary>
     /// [FSM 상태 리스트 초기화]
     /// </summary>
+    // KimEnemy.cs 내부의 InitStateList() 함수를 다음과 같이 분기 처리합니다.
     private void InitStateList()
     {
         stateList = new Dictionary<KimEnemyState, IKimEnemyState>();
-
         stateList[KimEnemyState.IDLE] = new KimEnemyIdle();
         stateList[KimEnemyState.PATROL] = new KimEnemyPatrol();
         stateList[KimEnemyState.CHASE] = new KimEnemyChase();
-        stateList[KimEnemyState.ATTACK] = new KimEnemyAttack();
         stateList[KimEnemyState.DEAD] = new KimEnemyDead();
-
+        // 방법 A의 핵심: isRanged 설정에 따라 공격 상태 클래스를 동적으로 꽂아 넣습니다.
+        if (isRanged)
+        {
+            stateList[KimEnemyState.ATTACK] = new KimEnemyRangedAttack();
+        }
+        else
+        {
+            stateList[KimEnemyState.ATTACK] = new KimEnemyAttack();
+        }
         // 기본 대기 상태로 시작
         currentEnemyState = KimEnemyState.IDLE;
         ChangeState(currentEnemyState);
