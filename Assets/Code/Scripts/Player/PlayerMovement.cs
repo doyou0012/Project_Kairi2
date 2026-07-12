@@ -34,12 +34,13 @@ public class PlayerMovement : MonoBehaviour
 	[Header("플레이어 대쉬 관련")]
 	[SerializeField] GameObject dashEffectPref;
 	[SerializeField] Vector3 dashEffectOffset = new Vector3(0f, -1f, 0f);
-	public bool isDash;		// 대쉬 여부
-	private float dashTimer;    // 대쉬 타이머
-	private Vector2 currDashVelocity;   // 대쉬 시작 시 경사면 대쉬 속도 벡터
-	private float dashDir;      // 대쉬 X축 방향 (-1: 왼쪽, 1: 오른쪽)
 	[SerializeField] private float dashCooldown = 1f;   // 대쉬 쿨타임
-	private float dashCooldownTimer;                    // 남은 쿨타임
+	public bool isDash;						// 대쉬 여부
+	private float dashTimer;				// 대쉬 타이머
+	private Vector2 currDashVelocity;		// 대쉬 시작 시 경사면 대쉬 속도 벡터
+	private float dashDir;					// 대쉬 X축 방향 (-1: 왼쪽, 1: 오른쪽)
+	private float dashCooldownTimer;		// 남은 쿨타임
+	private LayerMask defaultExcludeMask;	// 대쉬 전 기존 마스크
 
 	public Vector2 inputVec;
 
@@ -100,8 +101,7 @@ public class PlayerMovement : MonoBehaviour
 
 			if(dashTimer <= 0f)
 			{
-				isDash = false;
-				rigid.gravityScale = defaultGravityScale;	// 대쉬가 끝나면 기본 중력으로 변경
+				EndDash();
 			}
 			return;
 		}
@@ -171,6 +171,10 @@ public class PlayerMovement : MonoBehaviour
 			}
 
 			currDashVelocity = dirVec * stats.dashSpeed;
+
+			defaultExcludeMask = coll.excludeLayers;
+			coll.excludeLayers = LayerMask.GetMask(LayerName.enemy);
+			print($"dash defaultMask: {defaultExcludeMask.value}");
 			return;
 		}
 
@@ -297,6 +301,15 @@ public class PlayerMovement : MonoBehaviour
 	public void TriggerRollInput()
 	{
 		dashRequested = true;
+	}
+
+	public void EndDash()
+	{
+		print("End Dash");
+		isDash = false;
+		rigid.gravityScale = defaultGravityScale;
+		coll.excludeLayers = defaultExcludeMask;
+		print($"excludeLayer: {coll.excludeLayers.value}");
 	}
 
 	internal void SetCrouchInput(bool isPressed)

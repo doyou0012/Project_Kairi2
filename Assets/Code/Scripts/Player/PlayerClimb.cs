@@ -25,10 +25,13 @@ public class PlayerClimb : MonoBehaviour
 	[Header("체크 레이어")]      // TODO: Globals에 넣기
 	[SerializeField] private LayerMask w_Layer;
 	[SerializeField] private bool isWallJump;		// 벽에서 점프 중인지 여부
-
+	
 	private float isRight = 1;  // 바라보는 방향 (1: 오른쪽, -1: 왼쪽)
 	public bool isWallLeft;
 	public bool isWallRight;
+	private bool hasClimbedInThisAir;
+	private bool wasTouchingWall;	// 이전에도 벽이었는지 여부
+	private float lastVelX;			// 벽에 부딪히기 전 x값 속도
 
 	private void Awake()
 	{
@@ -47,6 +50,32 @@ public class PlayerClimb : MonoBehaviour
 
 		bool isCurrWall = isWallLeft || isWallRight;    // 현재 붙어있는 벽 위치 (왼, 오른)
 		bool isGrounded = groundChk ? groundChk.isGrounded : false;
+
+		if(!isGrounded)
+		{
+			hasClimbedInThisAir = false;
+		}
+
+		if(isCurrWall)
+		{
+			lastVelX = rigid.linearVelocityX;
+		}
+
+		// 벽에 붙었을 때
+		if (!isGrounded && !wasTouchingWall && isCurrWall && !hasClimbedInThisAir && rigid.linearVelocityY >= -0.1f)
+		{
+			// 이동할 경우
+			if(isWallLeft && movement.inputVec.x < 0 || isWallRight && movement.inputVec.x > 0)
+			{
+				//climbDelayTimer = wallClimbDelay; // 0.12초 동안 찰싹 매달릴 타이머 시작
+				//pendingClimbBoost = true;        // 매달림 대기 후 상승 뿜기 예약 장전
+				hasClimbedInThisAir = true;     // 중복 점프 방지
+
+				animator?.SetBool("isWallSliding", true);   // 애니메이션
+
+				rigid.linearVelocity = new Vector2(rigid.linearVelocityX, 0f);
+			}
+		}
 
 		//if (movement.inputVec.x > 0)
 		//	isRight = 1;

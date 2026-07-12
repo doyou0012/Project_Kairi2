@@ -54,7 +54,7 @@ public class KimEnemyPatrol : IKimEnemyState
                     {
                         // D단계: 시야 장애물 차단 여부 체크 (Raycast)
                         // 에너미 자신(Enemy 레이어)을 제외하고 벽이나 지형에 레이저가 먼저 막히는지 검사합니다.
-                        LayerMask mask = ~LayerMask.GetMask(Globals.LayerName.enemy);
+                        LayerMask mask = ~LayerMask.GetMask(LayerName.enemy);
                         RaycastHit2D hit = Physics2D.Raycast(enemyPos, dirToPlayer, distance, mask);
 
                         if (hit.collider == null || hit.collider.CompareTag(TagName.player))
