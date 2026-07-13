@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
 	private PlayerAttack attack;
 	private bool isJump;    // 점프 여부
 	private PlayerStatsRuntime stats;
+	[HideInInspector] public bool canMove = true;
 
 	// 점프
 	[Header("플레이어 점프 관련")]
@@ -92,6 +93,8 @@ public class PlayerMovement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (!canMove) return;
+
 		// 대쉬
 		if(isDash)
 		{

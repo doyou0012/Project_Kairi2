@@ -30,6 +30,7 @@ public class PlayerAttack : MonoBehaviour
 	private PlayerSlowMode slowMode;
 	private PlayerGroundChecker groundChk;
 	private float attackTimer;
+	public bool canAttack = true;
 
 
 	public bool IsAttacking { get; private set; }
@@ -53,8 +54,8 @@ public class PlayerAttack : MonoBehaviour
 		//	StartCoroutine(Attack());
 
 		// 공격 중이거나 공격 쿨타임이 다 안 찼으면 리턴
-		if (IsAttacking)
-			return;
+		if (!canAttack) return;
+		if (IsAttacking) return;
 
 		IsAttacking = true;
 
