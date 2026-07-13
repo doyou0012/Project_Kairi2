@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
 	private Rigidbody2D rigid;
 	private PlayerMovement movement;
-	private PlayerDash dash;
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
@@ -19,7 +18,6 @@ public class PlayerController : MonoBehaviour
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		movement = GetComponent<PlayerMovement>();
-		dash = GetComponent<PlayerDash>();
 		attack = GetComponent<PlayerAttack>();
 		slowMode = GetComponent<PlayerSlowMode>();
 		climb = GetComponent<PlayerClimb>();

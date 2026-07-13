@@ -249,8 +249,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillAttack
   slowFactor: 0.2
-  skillMinRadius: 1
-  skillMaxRadius: 10
+  skillMinRadius: 5
+  skillMaxRadius: 50
   Dot: {fileID: 5593872264793740822, guid: 9aa93511b1e687145a16f86b1bc7a0a3, type: 3}
   lineWidth: 0.5
   isActive: 0
@@ -47230,7 +47230,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 212099285}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48355,7 +48355,7 @@ GameObject:
   - component: {fileID: 1471607787}
   - component: {fileID: 1471607786}
   - component: {fileID: 1471607788}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: TestEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -50694,10 +50694,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy1
       objectReference: {fileID: 0}
-    - target: {fileID: 3370538431175618199, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -50717,10 +50713,6 @@ PrefabInstance:
     - target: {fileID: 1004635024995496750, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1004635024995496750, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
-      propertyPath: m_Layer
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1978394785461051679, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_Camera
