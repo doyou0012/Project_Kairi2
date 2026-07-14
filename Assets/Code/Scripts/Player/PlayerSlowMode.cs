@@ -8,8 +8,8 @@ public class PlayerSlowMode : MonoBehaviour
 {
 	[Header("Audio Mixer")]
 	public AudioMixer mixer;
-	[Header("Global Volume 오브젝트")]
-	public Volume globalVolume;
+	[Header("슬로우 배경 Panel")]
+	public GameObject panel;
 	//[Header("슬로우 게이지 UI")]
 	//public Slider slowGaugeSlider;
 	[Header("슬로우 비율")]
@@ -39,16 +39,18 @@ public class PlayerSlowMode : MonoBehaviour
 
 	private void Start()
 	{
-		if (globalVolume == null)
-		{
-			Debug.LogError("Global Volume이 할당되지 않았음");
-			return;
-		}
+		panel?.SetActive(false);
 
-		if (!globalVolume.profile.TryGet(out colorAdjustments))
-			Debug.LogError("Volume Profile에 없음");
-		if (!globalVolume.profile.TryGet(out bloom))
-			Debug.LogError("Volume Profile에 없음");
+		//if (globalVolume == null)
+		//{
+		//	Debug.LogError("Global Volume이 할당되지 않았음");
+		//	return;
+		//}
+
+		//if (!globalVolume.profile.TryGet(out colorAdjustments))
+		//	Debug.LogError("Volume Profile에 없음");
+		//if (!globalVolume.profile.TryGet(out bloom))
+		//	Debug.LogError("Volume Profile에 없음");
 	}
 
 	public void EnterSlow(float factor = slowFactor)
@@ -58,8 +60,8 @@ public class PlayerSlowMode : MonoBehaviour
 		{
 			// 슬로우 코루틴 시작
 			isPlayerSlow = true;
+			panel.SetActive(true);
 			StartSlow(factor);
-
 			solihoutte.Active = true;
 		}
 	}
@@ -70,6 +72,7 @@ public class PlayerSlowMode : MonoBehaviour
 		{
 			isPlayerSlow = false;
 			solihoutte.Active = false;
+			panel.SetActive(false);
 			StopSlow();
 		}
 	}
@@ -92,8 +95,6 @@ public class PlayerSlowMode : MonoBehaviour
 			return;
 		Time.timeScale = 1f;            // 시간 원래대로
 		Time.fixedDeltaTime = 0.02f;
-		if (colorAdjustments != null)
-			colorAdjustments.saturation.value = 0f;
 		if (bloom != null)
 			bloom.intensity.value = 0.8f;
 		mixer.SetFloat("MasterCutoff", 22000f); // 원래 소리

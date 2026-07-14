@@ -83,7 +83,6 @@ public class PlayerSkillAttack : MonoBehaviour
 			DotObj.transform.position = targetPos;
 			ShowLine();     // 선 보이기
 		}
-
 	}
 
 	private void ShowLine()

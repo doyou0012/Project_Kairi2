@@ -116,29 +116,29 @@ public class PlayerClimb : MonoBehaviour
 	}
 
 
-    public void WallJump()
-	{
-		isWallJump = true;
-		Invoke("FreezeX", 0.3f);	// 0.3초 후에 FreezeX 함수 실행
+ //   public void WallJump()
+	//{
+	//	isWallJump = true;
+	//	Invoke("FreezeX", 0.3f);	// 0.3초 후에 FreezeX 함수 실행
 
-		PlayerStatsRuntime stats = GameManager.Instance.playerStatsRuntime;
-        isRight *= -1;  // 방향 전환
-		rigid.linearVelocity = new Vector2(isRight * stats.wallJumpPower, 0.5f * stats.wallJumpPower);
-		movement.UpdateSprite(new Vector2(isRight, 0));
-		movement.inputVec = new Vector2(isRight, 0);
-    }
+	//	PlayerStatsRuntime stats = GameManager.Instance.playerStatsRuntime;
+ //       isRight *= -1;  // 방향 전환
+	//	rigid.linearVelocity = new Vector2(isRight * stats.wallJumpPower, 0.5f * stats.wallJumpPower);
+	//	movement.UpdateSprite(new Vector2(isRight, 0));
+	//	movement.inputVec = new Vector2(isRight, 0);
+ //   }
 
-	private void FreezeX()
-	{
-		isWallJump = false;
-		movement.inputVec = Vector2.zero;
-	}
+	//private void FreezeX()
+	//{
+	//	isWallJump = false;
+	//	movement.inputVec = Vector2.zero;
+	//}
 
 	private void FixedUpdate()
 	{
-		if(isWall && !groundChk.isGrounded)
-		//if (isWall && !isWallJump)
-		{
+		//if(isWall && !groundChk.isGrounded)
+		if (isWall && !isWallJump)
+			{
 			isWallJump = false;
 
 			animator.Play(PlayerAnimName.climbSlide);
