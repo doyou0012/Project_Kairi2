@@ -78,15 +78,6 @@ public class ExplosionObject : BaseObject
 	}
 
 	// 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
-	//  IDamageable
-	// 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
-
-	public override void TakeDamage(int attack)
-	{
-		Explode();
-	}
-
-	// 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
 	//  Gizmo
 	// 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式
 

@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: 314f5ac620bc76a49be0ad8f4b0f31ad
+guid: 09e521392c2e56e409696bb9d6e7ad2d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7186271244443480940
-    second: Dragon_2_0
+      213: -4195991312863267823
+    second: Dragon_Down_0
   - first:
-      213: 1800672389213123490
-    second: Dragon_2_1
+      213: -1683395285440804354
+    second: Dragon_Down_1
   - first:
-      213: -130110613964552703
-    second: Dragon_2_2
-  - first:
-      213: -6830041923868463474
-    second: Dragon_2_3
+      213: 7377396377156360432
+    second: Dragon_Down_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,13 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dragon_2_0
+      name: Dragon_Down_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 0
-        width: 44
-        height: 48
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +121,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c6378a05f93cab360800000000000000
-      internalID: 7186271244443480940
+      spriteID: 114f82cd128d4c5c0800000000000000
+      internalID: -4195991312863267823
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dragon_2_1
+      name: Dragon_Down_1
       rect:
         serializedVersion: 2
-        x: 44
+        x: 41
         y: 0
-        width: 44
-        height: 48
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,20 +143,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2a3f6e36ff54df810800000000000000
-      internalID: 1800672389213123490
+      spriteID: ef9cbba28e063a8e0800000000000000
+      internalID: -1683395285440804354
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dragon_2_2
+      name: Dragon_Down_2
       rect:
         serializedVersion: 2
-        x: 88
+        x: 81
         y: 0
-        width: 44
-        height: 48
+        width: 40
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,30 +165,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 10682210611c13ef0800000000000000
-      internalID: -130110613964552703
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Dragon_2_3
-      rect:
-        serializedVersion: 2
-        x: 132
-        y: 0
-        width: 44
-        height: 48
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: e8e6bceae01d631a0800000000000000
-      internalID: -6830041923868463474
+      spriteID: 0f898abfae6c16660800000000000000
+      internalID: 7377396377156360432
       vertices: []
       indices: 
       edges: []
@@ -200,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 73d5e99eb999b4d48b0d6d7344d68870
+    spriteID: cdd9113a1a08cfb4f85f6d3399806082
     internalID: 0
     vertices: []
     indices: 
@@ -210,12 +185,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":1.0},"gridSpriteSize":{"x":44.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":40.0,"y":47.0},"gridSpriteOffset":{"x":1.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Dragon_2_0: 7186271244443480940
-      Dragon_2_1: 1800672389213123490
-      Dragon_2_2: -130110613964552703
-      Dragon_2_3: -6830041923868463474
+      Dragon_Down_0: -4195991312863267823
+      Dragon_Down_1: -1683395285440804354
+      Dragon_Down_2: 7377396377156360432
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

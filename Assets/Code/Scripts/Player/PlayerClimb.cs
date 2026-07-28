@@ -151,7 +151,8 @@ public class PlayerClimb : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		if(wallChk != null)
+#if UNITY_EDITOR
+		if (wallChk != null)
 		{
 			Gizmos.color = Color.blue;
 			Gizmos.DrawRay(
@@ -159,5 +160,6 @@ public class PlayerClimb : MonoBehaviour
 				Vector2.right * isRight * playerStats.wallChkDist
 			);
 		}
+#endif
 	}
 }
