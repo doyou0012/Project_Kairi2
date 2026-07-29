@@ -10,65 +10,65 @@ namespace Globals
 	public static class TagName
 	{
 		// 적
-		public static readonly string enemy = "Enemy";
-		public static readonly string bullet = "Bullet";
+		public const string enemy = "Enemy";
+		public const string bullet = "Bullet";
 		// 오브젝트
-		public static readonly string obj = "NormalObject";
-		public static readonly string crackObj = "CrackObject";
-		public static readonly string expObj = "ExplosionObject";
-		public static readonly string door = "Door";
+		public const string obj = "NormalObject";
+		public const string crackObj = "CrackObject";
+		public const string expObj = "ExplosionObject";
+		public const string door = "Door";
 		// 플레이어 관련
-		public static readonly string player = "Player";
-		public static readonly string hook = "Hook";
+		public const string player = "Player";
+		public const string hook = "Hook";
 		// 배경 요소
-		public static readonly string ground = "Ground";
-		public static readonly string wall = "Wall";
-		public static readonly string oneWayPlatform = "OneWayPlatform";
-		public static readonly string trigger = "Trigger";
+		public const string ground = "Ground";
+		public const string wall = "Wall";
+		public const string oneWayPlatform = "OneWayPlatform";
+		public const string trigger = "Trigger";
 		// NPC
-		public static readonly string npc = "NPC";
+		public const string npc = "NPC";
 		// 카메라
-		public static readonly string cameraBound = "CameraBound";
+		public const string cameraBound = "CameraBound";
 	}
 
 	public static class LayerName
 	{
-		public static readonly string ground = "Ground";
-		public static readonly string oneWayPlatform = "OneWayPlatform";
-		public static readonly string crackObj = "CrackObject";
-		public static readonly string player = "Player";
-		public static readonly string enemy = "Enemy";
-		public static readonly string wall = "Wall";
+		public const string ground = "Ground";
+		public const string oneWayPlatform = "OneWayPlatform";
+		public const string crackObj = "CrackObject";
+		public const string player = "Player";
+		public const string enemy = "Enemy";
+		public const string wall = "Wall";
 	}
 
 	// 애니메이션 이름 관련 클래스
 	public static class EnemyAnimName	// 적
 	{
-		public static readonly string idle = "Enemy_Idle";
-		public static readonly string chase = "Enemy_Run";
-		public static readonly string attack = "Enemy_Shot1";
-		public static readonly string patrol = "Enemy_Walk";
-		public static readonly string recharge = "Enemy_Recharge";
+		public const string idle = "Enemy_Idle";
+		public const string chase = "Enemy_Run";
+		public const string attack = "Enemy_Shot1";
+		public const string patrol = "Enemy_Walk";
+		public const string recharge = "Enemy_Recharge";
 	}
 	public static class PlayerAnimName   // 플레이어
 	{
-		public static readonly string idle			= "Dragon_Idle";
-		public static readonly string run			= "Dragon_Run";
-		public static readonly string attack		= "Dragon_Attack";
-		public static readonly string landDown		= "Dragon_LandDown";
-		public static readonly string landing		= "Dragon_Landing";
-		public static readonly string landUp		= "Dragon_LandUp";
-		public static readonly string slide			= "Dragon_Slide";
-		public static readonly string roll			= "Dragon_Roll";
-		public static readonly string redgeClimb	= "Dragon_RedgeClimb";
-		public static readonly string climb			= "Dragon_Climb";
-		public static readonly string climbSlide	= "Dragon_ClimbSlide";
+		public const string idle			= "Dragon_Idle";
+		public const string run			= "Dragon_Run";
+		public const string attack		= "Dragon_Attack";
+		public const string landDown		= "Dragon_LandDown";
+		public const string landing		= "Dragon_Landing";
+		public const string landUp		= "Dragon_LandUp";
+		public const string slide			= "Dragon_Slide";
+		public const string roll			= "Dragon_Roll";
+		public const string redgeClimb	= "Dragon_RedgeClimb";
+		public const string climb			= "Dragon_Climb";
+		public const string climbSlide	= "Dragon_ClimbSlide";
 	}
 
 	// 프리펩 이름 관련 클래스
 	public static class PrefabName
 	{
-		public static readonly string bullet = "Bullet";
+		public const string bullet = "Bullet";
 	}
 
 	///  - 유니티의 애니메이터(Animator) 엔진은 문자열(String)로 글자를 정확하게 불러줘야만 애니메이션을 틀어줍니다.
@@ -78,15 +78,15 @@ namespace Globals
 	{
 		// 🔍 [C# 키워드 정밀 분석]
 		// 💡 유니티 애니메이터 컨트롤러 안에 만들어진 진짜 "Idle" 상태 노드의 스펠링과 100% 동일하게 글자를 맞춰 적어둡니다.
-		public static readonly string idle = "Enemy_Idle";
+		public const string idle = "Enemy_Idle";
 		// 💡 유니티 애니메이터 컨트롤러 안에 만들어진 순찰 걷기("Walk") 노드 스펠링과 일치시킵니다.
-		public static readonly string patrol = "Enemy_Walk";
+		public const string patrol = "Enemy_Walk";
 		// 💡 유니티 애니메이터 컨트롤러 안에 만들어진 공격("Shot1") 노드 스펠링과 일치시킵니다.
-		public static readonly string attack = "Enemy_Shot1";
+		public const string attack = "Enemy_Shot1";
 		// 💡 유니티 애니메이터 컨트롤러 안에 만들어진 맹렬한 질주("Run") 노드 스펠링과 일치시킵니다.
-		public static readonly string chase = "Enemy_Run";
+		public const string chase = "Enemy_Run";
 		// 💀 [신규 추가] 적이 으악 하고 쓰러지는 실제 유니티 죽음 애니메이션 노드 이름과 일치시킵니다.
-		public static readonly string dead = "Enemy_Die";
+		public const string dead = "Enemy_Die";
 	}
 
 

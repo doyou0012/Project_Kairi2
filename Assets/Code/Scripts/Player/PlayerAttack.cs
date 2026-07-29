@@ -8,12 +8,8 @@ public class PlayerAttack : MonoBehaviour
 	[Header("전투 설정")]
 	[Tooltip("칼을 한 번 베고 나서 다음 공격을 할 수 있을 때까지 기다리는 쿨타임 대기시간 (초)")]
 	[SerializeField] private float attackCooldown = 0.05f;
-
-	[Header("검광 이펙트")]
-	[Tooltip("칼을 벨 때 화면에 소환되어 나타날 멋진 검광 스프라이트 프리팹")]
-	[SerializeField] private GameObject slashEffectPrefab;
-	[Tooltip("캐릭터 중심에서 몇 미터 앞에 검광을 띄워서 소환할지 조절하는 거리 오프셋")]
-	[SerializeField] private Vector3 effectOffset = new Vector3(1f, 0f, 0f);
+	[Tooltip("플레이어가 공격한 후 타격감을 위해 잠시 멈출 시간")]
+	[SerializeField] private float afterAttackStopTime = 0.05f;
 
 	[Tooltip("칼날이 쓸고 지나가는 타격 범위의 둥근 원(Radius) 반경 크기")]
 	[SerializeField] private float attackRadius = 1.8f;
@@ -72,15 +68,15 @@ public class PlayerAttack : MonoBehaviour
 	{
 		IsAttacking = true;
 		stats = GameManager.Instance.playerStatsRuntime;
-		Vector3 startPos = rigid.position;
-		Vector3 currPos = startPos;
-		Vector3 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-		mousePos.z = 0f;
-		Vector3 dir = (mousePos - startPos).normalized;
+		Vector2 startPos = rigid.position;
+		Vector2 currPos = startPos;
+		Vector2 mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+		Vector2 dir = (mousePos - startPos).normalized;
 		float targetDist = groundChk.isGrounded || groundChk.isSlope ? stats.attackDist : 1.5f;
-		Vector3 targetPos = startPos + dir * targetDist;
+		Vector2 targetPos = startPos + dir * targetDist;
 		// -> 바닥이나 경사에 있을 경우에는 공격 거리만큼 이동
 		// -> 공격을 하거나 점프해서 떠 있을 경우 매우 짧은 거리로 이동
+		bool isSlow = false;	// 슬로우 여부
 
 		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform, LayerName.crackObj);
 		Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
@@ -102,43 +98,40 @@ public class PlayerAttack : MonoBehaviour
 
 		Debug.DrawRay(rigid.position, dir, Color.red, stats.attackDist);
 
-		// TODO: 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹 있음
-
-		if (crackHit)	// 부서지는 오브젝트
+		// 공격 시 무언가가 맞으면 때리는 위치에서 딜레이 + 카메라 쉐이킹
+		if (crackHit)   // 부서지는 오브젝트 (개별 처리)
 		{
-			crackHit.collider.GetComponent<CrackObject>()?.TakeDamage(stats.attack);
-
+			targetDist = crackHit.distance * 1.5f;
+			crackHit.collider.GetComponent<CrackObject>()?.Crack();
 			GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
 		}
 
-		if (hit)
+		if(hit)
 		{
 			Collider2D hitCol = hit.collider;
 
-			// 적
-			if (hitCol.CompareTag(TagName.enemy))
+			GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+
+			if (hitCol.CompareTag(TagName.enemy))    // 적
 			{
-				if (hitCol.TryGetComponent<IDamageable>(out IDamageable coll))
+				if (Vector2.Distance(rigid.position, hitCol.transform.position) >= stats.attackDist
+					|| !groundChk.isGrounded)
 				{
-					coll.TakeDamage(stats.attack);  // 공격력만큼 데미지 주기
+					targetDist = Vector2.Distance(rigid.position, hitCol.transform.position);
 				}
-				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
-				targetDist = Vector2.Distance(rigid.position, hit.point) * 0.2f;
+				isSlow = true;
 			}
-			// 문
-			else if (hitCol.CompareTag(TagName.door))
+			else if (hitCol.CompareTag(TagName.door))   // 문
 			{
 				if (hitCol.TryGetComponent<IInteractionObject>(out IInteractionObject coll))
 				{
 					coll.OnInteract();  // 상호작용
 				}
 				targetDist = 0f;
-				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
 			}
-			// 총알
-			else if (hitCol.CompareTag(TagName.bullet))
+			else if (hitCol.CompareTag(TagName.bullet)) // 총알
 			{
-				// TODO: 총알 패링
+				// 총알 패링
 				if (hit.transform.TryGetComponent<EnemyBullet>(out var bullet))
 				{
 					print($"Hit Bullet {bullet.ToString()}");
@@ -147,16 +140,26 @@ public class PlayerAttack : MonoBehaviour
 					targetDist = 0f;
 				}
 			}
-			else
+			else    // 그 외
 			{
-				targetDist = stats.attackDist;
+				targetDist = hit.distance;
 			}
 
-			targetPos = startPos + dir * targetDist;
 		}
+
+		targetPos = rigid.position + dir * targetDist;
 
 		// 공격 이펙트
 		GameObject attackObj = SpawnAttackEffect(dir);
+
+		// 슬로우
+		if (isSlow)
+		{
+			print($"슬로우모드 (hit: {hit.collider.tag}, crackHit?: {crackHit.collider != null})");
+			slowMode.EnterOnlySlow();
+			yield return new WaitForSecondsRealtime(afterAttackStopTime);
+			slowMode.ExitSlow();
+		}
 
 		// 공격 거리만큼 대쉬
 		while (Vector2.Distance(rigid.position, targetPos) > 0.5f
@@ -168,7 +171,16 @@ public class PlayerAttack : MonoBehaviour
 			if(attackObj != null) attackObj.transform.position = rigid.position;
 			yield return null;  // 다음 프레임까지 대기
 		}
+
 		rigid.MovePosition(targetPos);
+
+		if (hit)	// 적 데미지
+		{
+			if (hit.collider.TryGetComponent<IDamageable>(out IDamageable coll))
+			{
+				coll.TakeDamage(stats.attack);  // 공격력만큼 데미지
+			}
+		}
 
 		yield return new WaitForSeconds(stats.attackCoolTime);
 		attackTimer = 0f;

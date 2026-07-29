@@ -76,10 +76,10 @@ public class CrackObject : BaseObject
 	}
 
 	// ──────────────────────────────────────────
-	//  IDamageable
+	//  상호작용 (부서지기)
 	// ──────────────────────────────────────────
 
-	public override void TakeDamage(int attack)
+	public void Crack()
 	{
 		Destroy(gameObject);
 	}

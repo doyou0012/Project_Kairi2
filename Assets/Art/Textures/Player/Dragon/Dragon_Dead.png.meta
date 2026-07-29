@@ -1,19 +1,25 @@
 fileFormatVersion: 2
-guid: 314f5ac620bc76a49be0ad8f4b0f31ad
+guid: 9927fcba4c836994eb8ce4e141784f6a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7186271244443480940
-    second: Dragon_2_0
+      213: 1668138916864555828
+    second: Dragon_Damaged_0
   - first:
-      213: 1800672389213123490
-    second: Dragon_2_1
+      213: 3378552647343371294
+    second: Dragon_Damaged_1
   - first:
-      213: -130110613964552703
-    second: Dragon_2_2
+      213: -886375304024815321
+    second: Dragon_Damaged_2
   - first:
-      213: -6830041923868463474
-    second: Dragon_2_3
+      213: -8925330159344983008
+    second: Dragon_Damaged_3
+  - first:
+      213: 8412576851773186817
+    second: Dragon_Damaged_4
+  - first:
+      213: 405368191904054566
+    second: Dragon_Damaged_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,13 +115,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dragon_2_0
+      name: Dragon_Damaged_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 2
         y: 0
-        width: 44
-        height: 48
+        width: 43
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c6378a05f93cab360800000000000000
-      internalID: 7186271244443480940
+      spriteID: 43b77b7b18b662710800000000000000
+      internalID: 1668138916864555828
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dragon_2_1
+      name: Dragon_Damaged_1
       rect:
         serializedVersion: 2
-        x: 44
+        x: 45
         y: 0
-        width: 44
-        height: 48
+        width: 43
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,20 +152,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2a3f6e36ff54df810800000000000000
-      internalID: 1800672389213123490
+      spriteID: e147bdf7bb703ee20800000000000000
+      internalID: 3378552647343371294
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dragon_2_2
+      name: Dragon_Damaged_2
       rect:
         serializedVersion: 2
         x: 88
         y: 0
-        width: 44
-        height: 48
+        width: 43
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 10682210611c13ef0800000000000000
-      internalID: -130110613964552703
+      spriteID: 7290ce17b56f2b3f0800000000000000
+      internalID: -886375304024815321
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dragon_2_3
+      name: Dragon_Damaged_3
       rect:
         serializedVersion: 2
-        x: 132
+        x: 131
         y: 0
-        width: 44
-        height: 48
+        width: 43
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -190,8 +196,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e8e6bceae01d631a0800000000000000
-      internalID: -6830041923868463474
+      spriteID: 024692d228bd22480800000000000000
+      internalID: -8925330159344983008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dragon_Damaged_4
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 0
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1036d9f231a7fb470800000000000000
+      internalID: 8412576851773186817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dragon_Damaged_5
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 0
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62dfea9093820a500800000000000000
+      internalID: 405368191904054566
       vertices: []
       indices: 
       edges: []
@@ -200,7 +250,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 73d5e99eb999b4d48b0d6d7344d68870
+    spriteID: a09177e997f986b438dc64f5fa9d4c33
     internalID: 0
     vertices: []
     indices: 
@@ -210,12 +260,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":1.0},"gridSpriteSize":{"x":44.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":1.0},"gridSpriteSize":{"x":43.0,"y":45.0},"gridSpriteOffset":{"x":2.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Dragon_2_0: 7186271244443480940
-      Dragon_2_1: 1800672389213123490
-      Dragon_2_2: -130110613964552703
-      Dragon_2_3: -6830041923868463474
+      Dragon_Damaged_0: 1668138916864555828
+      Dragon_Damaged_1: 3378552647343371294
+      Dragon_Damaged_2: -886375304024815321
+      Dragon_Damaged_3: -8925330159344983008
+      Dragon_Damaged_4: 8412576851773186817
+      Dragon_Damaged_5: 405368191904054566
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
