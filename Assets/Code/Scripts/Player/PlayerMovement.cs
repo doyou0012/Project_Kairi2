@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
 	private Vector2 currDashVelocity;		// 대쉬 시작 시 경사면 대쉬 속도 벡터
 	private float dashDir;					// 대쉬 X축 방향 (-1: 왼쪽, 1: 오른쪽)
 	private float dashCooldownTimer;		// 남은 쿨타임
-	private LayerMask defaultExcludeMask;	// 대쉬 전 기존 마스크
 
 	public Vector2 inputVec;
 
@@ -174,10 +173,6 @@ public class PlayerMovement : MonoBehaviour
 			}
 
 			currDashVelocity = dirVec * stats.dashSpeed;
-
-			defaultExcludeMask = coll.excludeLayers;
-			coll.excludeLayers = LayerMask.GetMask(LayerName.enemy);
-			print($"dash defaultMask: {defaultExcludeMask.value}");
 			return;
 		}
 
@@ -311,7 +306,6 @@ public class PlayerMovement : MonoBehaviour
 		print("End Dash");
 		isDash = false;
 		rigid.gravityScale = defaultGravityScale;
-		coll.excludeLayers = defaultExcludeMask;
 		print($"excludeLayer: {coll.excludeLayers.value}");
 	}
 

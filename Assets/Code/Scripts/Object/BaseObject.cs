@@ -6,7 +6,7 @@ using Globals;
 /// 오브젝트 공통 기반 클래스
 /// 바닥 체크 / 충돌 상태 / 풀링 초기화 등 공유 로직 담당
 /// </summary>
-public abstract class BaseObject : MonoBehaviour, IDamageable
+public abstract class BaseObject : MonoBehaviour
 {
 	//public bool isGrounded;
 	public bool hasCollided = false;
@@ -29,8 +29,6 @@ public abstract class BaseObject : MonoBehaviour, IDamageable
 	/// 오브젝트 풀 재사용 시 초기화
 	/// </summary>
 	public virtual void Init() { }
-
-	public abstract void TakeDamage(int attack);
 
 	// ──────────────────────────────────────────
 	//  바닥 / 충돌 체크
