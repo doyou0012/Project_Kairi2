@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
 	// 벽 타기 (Wall Jump / Wall Slide)
 	[Header("플레이어 벽 타기 설정")]
 	[Tooltip("벽을 밀면서 점프 시 적용되는 점프 배수")]
-	[SerializeField] private float wallPushJumpMultiplier = 1.5f;
+	[SerializeField] private float wallPushJumpMultiplier = 2f;
 	[Tooltip("벽 미끄러짐 최대 속도")]
 	[SerializeField] private float wallSlideSpeed = 2f;
 	[Tooltip("벽 점프 시 적용되는 힘 (X: 반대 방향, Y: 상향)")]

@@ -4,7 +4,6 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
-	[SerializeField]
 	private CinemachineImpulseSource impulseSource;
 
 	[SerializeField]
@@ -18,6 +17,7 @@ public class CameraShake : MonoBehaviour
 
 	private void Awake()
 	{
+		impulseSource = GetComponent<CinemachineImpulseSource>();
 		virtualCamera = GetComponent<CinemachineCamera>();
 		if (virtualCamera != null)
 			noise = virtualCamera.GetCinemachineComponent(CinemachineCore.Stage.Noise) as CinemachineBasicMultiChannelPerlin;
