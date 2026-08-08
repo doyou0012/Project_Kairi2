@@ -1,4 +1,4 @@
-﻿// PlayerController.cs
+// PlayerController.cs
 using Globals;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
-	private PlayerClimb climb;
 	private PlayerSkillAttack skillAttack;
 	private float originalGravity;
 
@@ -20,7 +19,6 @@ public class PlayerController : MonoBehaviour
 		movement = GetComponent<PlayerMovement>();
 		attack = GetComponent<PlayerAttack>();
 		slowMode = GetComponent<PlayerSlowMode>();
-		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
     }
@@ -28,22 +26,11 @@ public class PlayerController : MonoBehaviour
 	private void Start()
 	{
 		originalGravity = rigid.gravityScale;
-		//movement.Init();
 	}
 
 	private void OnMove(InputValue val)
 	{
 		if (GlobalUtil.IsNullScript(movement)) return;
-		//if (climb.isWallJump) return;	// 벽에서 점프 중일 경우 이동 X
-		//if (dash.isDashing)
-		//{
-		//	movement.inputVec = Vector2.zero;
-		//	return;
-		//}
-
-		//animator.Play(PlayerAnimName.run);
-		//movement.inputVec = val.Get<Vector2>();
-		//dash.TryDash();
 
 		Vector2 inputVec = val.Get<Vector2>();
 
@@ -52,20 +39,11 @@ public class PlayerController : MonoBehaviour
 
 		if (hadNoHorizontal && hasHorizontal && movement.isCrouchPressed)
 		{
-			movement.TriggerRollInput(); // 구르기 준비
+			movement.TriggerRollInput();
 		}
 
-		// Movement에 전달해서 플레이어가 수평 이동하도록 전달
 		movement.inputVec = inputVec;
 	}
-
-	//private void OnReleaseMove(InputValue val)
-	//{
-	//	if (IsNullScript(movement)) return;
-
-	//	if (dash.isDashing) return;
-	//	animator.Play(PlayerAnimName.idle);
-	//}
 
 	private void OnJump(InputValue val)
 	{
@@ -80,22 +58,11 @@ public class PlayerController : MonoBehaviour
 
 		if(val.isPressed)
 		{
-			//if (!groundChecker.IsGrounded) return;
-			//dash.isDashReady = true;
-			//animator.Play(PlayerAnimName.landDown);
-			//if (groundChecker.IsGroundedOneway)
-			//	transform.position += Vector3.down * 0.1f;
-			//else
-			//	dash.TryDash();
 			movement.SetCrouchInput(val.isPressed);
-			movement.TriggerRollInput(); // 구르기 준비
+			movement.TriggerRollInput();
 		}
 		else
 		{
-			//if (dash.isDashing) return;
-			//dash.isDashReady = false;
-			//animator.Play(PlayerAnimName.landUp);
-
 			movement.SetCrouchInput(false);
 		}
 	}
@@ -105,9 +72,9 @@ public class PlayerController : MonoBehaviour
 		if (GlobalUtil.IsNullScript(attack)) return;
 		if(val.isPressed)
 		{
-			rigid.gravityScale = 1f;	// 중력값 조절
+			rigid.gravityScale = 1f;
 			attack.TryAttack();
-			rigid.gravityScale = originalGravity;	// 복구
+			rigid.gravityScale = originalGravity;
 		}
 	}
 
@@ -125,7 +92,6 @@ public class PlayerController : MonoBehaviour
 
 	private void OnSlow(InputValue val)
 	{
-		// 플레이어 사망 시 슬로우 X
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
 			return;
 
@@ -137,14 +103,12 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D col)
 	{
-		groundChecker.CheckGround();      // 땅 체크
+		groundChecker.CheckGround();
 
-		// 문 열기
 		if (col.transform.CompareTag(TagName.door))
 		{
 			if (col.transform.TryGetComponent(out IInteractionObject door))
 			{
-				// 플레이어가 문에 붙어서 움직일 때 문 열기
 				if (movement.inputVec.x != 0)
 				{
 					door.OnInteract();
@@ -152,9 +116,10 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+
 	private void OnCollisionStay2D(Collision2D col)
 	{
-		groundChecker.CheckGround();      // 땅 체크
+		groundChecker.CheckGround();
 	}
 
 	private void OnCollisionExit2D(Collision2D col)
@@ -162,10 +127,4 @@ public class PlayerController : MonoBehaviour
 		if (col.transform.CompareTag(TagName.ground))
 			groundChecker.isGrounded = false;
 	}
-
-	//private void OnTriggerEnter2D(Collider2D col)
-	//{
-	//	if (col.CompareTag(TagName.bullet))
-	//		col.GetComponent<EnemyBullet>().DeflectBullet();
-	//}
 }
