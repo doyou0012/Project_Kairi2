@@ -25114,6 +25114,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: afterTouchDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: deleteTouchDuration
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6768179963866808644, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_SortingOrder
       value: 2
@@ -36955,6 +36963,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     - target: {fileID: 4928276231561505579, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17
@@ -36995,6 +37007,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: afterTouchDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: deleteTouchDuration
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -37010,6 +37030,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_Name
+      value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_TagString
       value: Door
       objectReference: {fileID: 0}
     - target: {fileID: 4928276231561505579, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
@@ -37051,6 +37075,14 @@ PrefabInstance:
     - target: {fileID: 4928276231561505579, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: afterTouchDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: deleteTouchDuration
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37218,6 +37250,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3777974463865605517, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: m_TagString
+      value: Door
+      objectReference: {fileID: 0}
     - target: {fileID: 4928276231561505579, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9
@@ -37257,6 +37293,14 @@ PrefabInstance:
     - target: {fileID: 4928276231561505579, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: afterTouchDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5478084365551377756, guid: bacacdc1c92005946b178bc31ad86691, type: 3}
+      propertyPath: deleteTouchDuration
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37484,11 +37528,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 572496967171140288, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.58
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 572496967171140288, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.06663536
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 572496967171140288, guid: e45488ae22fe0064b9d2b55b4a154a90, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37900,6 +37944,10 @@ PrefabInstance:
       propertyPath: panel
       value: 
       objectReference: {fileID: 849926270}
+    - target: {fileID: 7530166954907178226, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: wallPushJumpMultiplier
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8042885108204123329, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: blackCanvas
       value: 
@@ -46649,9 +46697,9 @@ SceneRoots:
   - {fileID: 1774902312}
   - {fileID: 1318433779}
   - {fileID: 1588730728}
-  - {fileID: 497196981}
   - {fileID: 1554390092}
   - {fileID: 2084456453}
   - {fileID: 969444008}
   - {fileID: 944510112}
   - {fileID: 1346771079}
+  - {fileID: 497196981}

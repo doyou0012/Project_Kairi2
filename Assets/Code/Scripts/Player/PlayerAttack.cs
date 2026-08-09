@@ -127,11 +127,10 @@ public class PlayerAttack : MonoBehaviour
 			}
 			else if (hitCol.CompareTag(TagName.door))   // 문
 			{
-				if (hitCol.TryGetComponent<IInteractionObject>(out IInteractionObject coll))
+				if (hitCol.TryGetComponent(out DoorController door))
 				{
-					coll.OnInteract();  // 상호작용
+					door.OnOpen();  // 상호작용
 				}
-				targetDist = 0f;
 			}
 			else if (hitCol.CompareTag(TagName.bullet)) // 총알
 			{

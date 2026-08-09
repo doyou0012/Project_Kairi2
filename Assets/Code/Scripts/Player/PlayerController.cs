@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 	private PlayerSkillAttack skillAttack;
 	private float originalGravity;
 
+	private Collision2D collidedObj;     // 플레이어와 상호작용 할 오브젝트
+
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
@@ -21,7 +23,26 @@ public class PlayerController : MonoBehaviour
 		slowMode = GetComponent<PlayerSlowMode>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
-    }
+	}
+
+	private void Update()
+	{
+		// 문 상호작용
+		if (collidedObj != null)
+		{
+			if (collidedObj.transform.TryGetComponent(out DoorController door))
+			{
+				if (movement.inputVec.x != 0)
+				{
+					print($"Try Open");
+					if(door.TryOpen())		// 문 열기 시도해서 성공할 경우 오브젝트 없애기
+					{
+						collidedObj = null;
+					}
+				}
+			}
+		}
+	}
 
 	private void Start()
 	{
@@ -56,7 +77,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (GlobalUtil.IsNullScript(movement)) return;
 
-		if(val.isPressed)
+		if (val.isPressed)
 		{
 			movement.SetCrouchInput(val.isPressed);
 			movement.TriggerRollInput();
@@ -70,7 +91,7 @@ public class PlayerController : MonoBehaviour
 	private void OnAttack(InputValue val)
 	{
 		if (GlobalUtil.IsNullScript(attack)) return;
-		if(val.isPressed)
+		if (val.isPressed)
 		{
 			rigid.gravityScale = 1f;
 			attack.TryAttack();
@@ -80,7 +101,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnSkillAttack(InputValue val)
 	{
-		if(val.isPressed)
+		if (val.isPressed)
 		{
 			skillAttack.EnterSkill();
 		}
@@ -107,13 +128,7 @@ public class PlayerController : MonoBehaviour
 
 		if (col.transform.CompareTag(TagName.door))
 		{
-			if (col.transform.TryGetComponent(out IInteractionObject door))
-			{
-				if (movement.inputVec.x != 0)
-				{
-					door.OnInteract();
-				}
-			}
+			collidedObj = col;
 		}
 	}
 
