@@ -114,8 +114,6 @@ public class PlayerAttack : MonoBehaviour
 		{
 			Collider2D hitCol = hit.collider;
 
-			GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
-
 			if (hitCol.CompareTag(TagName.enemy))    // 적
 			{
 				if (Vector2.Distance(rigid.position, hitCol.transform.position) >= stats.attackDist
@@ -127,6 +125,8 @@ public class PlayerAttack : MonoBehaviour
 			}
 			else if (hitCol.CompareTag(TagName.door))   // 문
 			{
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+
 				if (hitCol.TryGetComponent(out DoorController door))
 				{
 					door.OnOpen();  // 상호작용
@@ -134,6 +134,8 @@ public class PlayerAttack : MonoBehaviour
 			}
 			else if (hitCol.CompareTag(TagName.bullet)) // 총알
 			{
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+
 				// 총알 패링
 				if (hit.transform.TryGetComponent<EnemyBullet>(out var bullet))
 				{

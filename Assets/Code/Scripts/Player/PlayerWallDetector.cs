@@ -45,8 +45,6 @@ public class PlayerWallDetector : MonoBehaviour
 		// 매 프레임마다 좌우의 벽 유무를 물리 엔진으로 검사합니다.
 		IsTouchingWall = (WallAheadDirection = CheckWall(wallCheckDistance)) != 0;
 		IsWallAhead = (WallDirection = CheckWall(wallAheadCheckDistance)) != 0;
-
-		print($"IsTouchingWall: {IsTouchingWall} ({WallAheadDirection}), IsWallAhead: {IsWallAhead} ({wallAheadCheckDistance})");
 	}
 
 	/// <summary>
