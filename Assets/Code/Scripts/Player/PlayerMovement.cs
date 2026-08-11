@@ -7,48 +7,65 @@ public class PlayerMovement : MonoBehaviour
 	private Rigidbody2D rigid;
 	private Collider2D coll;
 	private PlayerGroundChecker groundChecker;
+	private PlayerWallDetector wallDetector;
 	private PlayerAttack attack;
-	private bool isJump;    // 점프 여부
+	private bool isJump;    // 점프 중
 	private PlayerStatsRuntime stats;
 	[HideInInspector] public bool canMove = true;
 
 	// 점프
-	[Header("플레이어 점프 관련")]
-	[Tooltip("점프하고 땅에 닿기 전 점프 입력을 저장할 시간")]
+	[Header("플레이어 점프 설정")]
+	[Tooltip("선행 입력으로 유효한 입력 시간")]
 	[SerializeField] private float jumpBufferTime = 0.15f;
-	[Tooltip("점프하고 떨어질 때 가속도")]
+	[Tooltip("낙하 시 추가 중력")]
 	[SerializeField] private float fallMultiplier = 3f;
-	[Tooltip("점프 키를 살짝만 눌렀을 때 점프할 중력값")]
+	[Tooltip("점프 키를 살짝 뗐을 때 추가 중력값")]
 	[SerializeField] private float lowJumpMultiplier = 8f;
-	private float jumpBufferCounter;	// 선입력된 잔여 점프 유효 시간 카운터
-	private float landingImpactTimer;   // 착지 모션 타이머
+	private float jumpBufferCounter;	// 입력된 잔여 선행 입력 시간 카운터
+	private float landingImpactTimer;   // 착지 타이머
 
-	// 웅크리기
+	// 벽 타기 (Wall Jump / Wall Slide)
+	[Header("플레이어 벽 타기 설정")]
+	[Tooltip("벽을 밀면서 점프 시 적용되는 점프 배수")]
+	[SerializeField] private float wallPushJumpMultiplier = 2f;
+	[Tooltip("벽 미끄러짐 최대 속도")]
+	[SerializeField] private float wallSlideSpeed = 2f;
+	[Tooltip("벽 점프 시 적용되는 힘 (X: 반대 방향, Y: 상향)")]
+	[SerializeField] private Vector2 wallJumpForce = new Vector2(50f, 12f);
+	[Tooltip("벽 점프 시 수평 이동 제어 지속 시간")]
+	[SerializeField] private float wallJumpDuration = 1f;
+
+	public bool IsWallSliding { get; private set; }
+	public bool IsWallJumping { get; private set; }
+	private float wallJumpTimer;
+
+	// 크라우치
 	private bool dashRequested;
 	public bool isCrouchPressed;
 
-	// 경사로 방지 및 각도 보정용 코어 변수
+	// 경사로 및 기타 제어
 	private float slopeJumpProtectionTimer;
 	private float defaultGravityScale = 3f;
 
-	// 대쉬
-	[Header("플레이어 대쉬 관련")]
+	// 대시
+	[Header("플레이어 대시 설정")]
 	[SerializeField] GameObject dashEffectPref;
 	[SerializeField] Vector3 dashEffectOffset = new Vector3(0f, -1f, 0f);
-	[SerializeField] private float dashCooldown = 1f;   // 대쉬 쿨타임
-	public bool isDash;						// 대쉬 여부
-	private float dashTimer;				// 대쉬 타이머
-	private Vector2 currDashVelocity;		// 대쉬 시작 시 경사면 대쉬 속도 벡터
-	private float dashDir;					// 대쉬 X축 방향 (-1: 왼쪽, 1: 오른쪽)
-	private float dashCooldownTimer;		// 남은 쿨타임
+	[SerializeField] private float dashCooldown = 1f;   // 대시 쿨타임
+	public bool isDash;						// 대시 중
+	private float dashTimer;				// 대시 타이머
+	private Vector2 currDashVelocity;		// 대시 당시 수평 방향 대시 속도 벡터
+	private float dashDir;					// 대시 X방향 (-1: 좌, 1: 우)
+	private float dashCooldownTimer;		// 쿨타임 타이머
 
 	public Vector2 inputVec;
 
-    private void Awake()
-    {
+	private void Awake()
+	{
 		rigid = GetComponent<Rigidbody2D>();
 		coll = GetComponent<Collider2D>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
+		wallDetector = GetComponent<PlayerWallDetector>();
 		attack = GetComponent<PlayerAttack>();
 	}
 
@@ -68,7 +85,27 @@ public class PlayerMovement : MonoBehaviour
 			landingImpactTimer -= Time.deltaTime;
 		}
 
-		// 공중에 몸이 떴거나 웅크리기가 해제될 경우 준비 해제
+		// 벽 점프 타이머 관리
+		if (IsWallJumping)
+		{
+			wallJumpTimer -= Time.deltaTime;
+			if (wallJumpTimer <= 0f)
+			{
+				IsWallJumping = false;
+			}
+		}
+
+		// 벽 슬라이딩 상태 체크
+		if (wallDetector != null && !groundChecker.isGrounded && wallDetector.IsTouchingWall)
+		{
+			IsWallSliding = true;
+		}
+		else
+		{
+			IsWallSliding = false;
+		}
+
+		// 공중에 없을 때나 크라우치가 아닐 때 대시 취소
 		if (!groundChecker.isGrounded || !isCrouchPressed)
 		{
 			dashRequested = false;
@@ -79,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
 			jumpBufferCounter -= Time.deltaTime;
 		}
 
-		if (dashCooldownTimer > 0f)		// 대쉬 쿨타임
+		if (dashCooldownTimer > 0f)		// 대시 쿨타임
 		{
 			dashCooldownTimer -= Time.deltaTime;
 		}
@@ -94,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		if (!canMove) return;
 
-		// 대쉬
+		// 대시
 		if(isDash)
 		{
 			dashTimer -= Time.fixedDeltaTime;
@@ -114,22 +151,42 @@ public class PlayerMovement : MonoBehaviour
 
 		Move();     // 이동
 
-		// 벽점프 또는 점프가 가능할 때 점프하기
-		if (jumpBufferCounter > 0f)
+		// 벽 슬라이딩 속도 제어
+		if (IsWallSliding)
 		{
-			if (groundChecker.isGrounded)
+			if (rigid.linearVelocityY < -wallSlideSpeed)
 			{
-				Jump();
+				rigid.linearVelocity = new Vector2(rigid.linearVelocityX, -wallSlideSpeed);
 			}
-			// TODO: 벽 점프
-			//else if (wallMovement != null && wallMovement.CanWallJump())
-			//{
-			//	wallMovement.ExecuteWallJump();
-			//	jumpBufferCounter = 0f; // 점프 발동 즉시 버퍼 수명 0 소거
-			//}
 		}
 
-		// 가변 중력 감가 속도 연산
+		// 점프 또는 벽 점프 실행
+		if (jumpBufferCounter > 0f)
+		{
+			// 벽 점프
+			if (wallDetector != null && wallDetector.IsTouchingWall && inputVec.x != 0f)
+			{
+				print($"push wall");
+				ExecuteWallPushJump();
+				jumpBufferCounter = 0f;
+			}
+			// 벽 슬라이딩
+			else if (IsWallSliding)
+			{
+				print($"sliding");
+				ExecuteWallJump();
+				jumpBufferCounter = 0f;
+			}
+			// 일반 점프
+			else if (groundChecker.isGrounded)
+			{
+				print($"jump");
+				Jump();
+				jumpBufferCounter = 0f;
+			}
+		}
+
+		// 중력 추가 및 속도 제어
 		ApplyGravityModifiers();
 	}
 
@@ -138,26 +195,26 @@ public class PlayerMovement : MonoBehaviour
 		bool isCrouching = groundChecker.isGrounded && isCrouchPressed;
 		bool hasHorizontalInput = Mathf.Abs(inputVec.x) > 0.1f;
 
-		// 대쉬 이동
+		// 대시 이동
 		if(dashRequested && isCrouching && hasHorizontalInput && !isDash)
 		{
 			isDash = true;
 			dashTimer = stats.dashDuration;
 			dashDir = inputVec.x > 0f ? 1f : -1f;
-			dashRequested = false;  // 대쉬 예약 파괴
+			dashRequested = false;  // 대시 예약 해제
 
-			// 대쉬하는 방향으로 오브젝트 회전
+			// 대시하는 방향 이펙트 회전
 			transform.eulerAngles = new Vector3(0f, dashDir > 0f ? 0f : 180f, 0f);
 
-			// 대쉬 이펙트
+			// 대시 이펙트
 			GameObject dashObj = Instantiate(dashEffectPref, (transform.position + dashEffectOffset), transform.rotation);
 
-			Vector2 dirVec = new Vector2(dashDir, 0f);  // 대쉬 방향 벡터 생성
-			Vector2 rayOrigin = (Vector2)coll.bounds.center;    // 발 아래 Raycast 방향
+			Vector2 dirVec = new Vector2(dashDir, 0f);  // 대시 방향 기본값
+			Vector2 rayOrigin = (Vector2)coll.bounds.center;    // 발 아래 Raycast 위치
 			float sniffDist = coll.bounds.extents.y + 0.8f;
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, sniffDist, LayerMask.GetMask(LayerName.ground));
 
-			// DEBUG: 땅을 찾으면 하늘색, 못 찾으면 자홍색
+			// DEBUG: 땅 찾으면 하늘색, 못 찾으면 분홍색
 			Color rayColor = hit ? Color.cyan : Color.magenta;
 			Debug.DrawRay(rayOrigin, Vector2.down * sniffDist, rayColor, 1.5f);
 
@@ -176,17 +233,17 @@ public class PlayerMovement : MonoBehaviour
 			return;
 		}
 
-		// 벽 점프 동안에는 조작 무시
-		//if (wallMovement != null && wallMovement.IsWallJumping)
-		//{
-		//	return;
-		//}
+		// 벽 점프 수행 중 수평 이동 제한
+		if (IsWallJumping)
+		{
+			return;
+		}
 
 		// 기본 이동
 		float targetSpeed = inputVec.x * stats.moveSpeed;
 		float velY = rigid.linearVelocityY;
 
-		// 경사에 가만히 서있을 때 미끄러짐 방지 (이동속도 제거)
+		// 경사로 미끄러짐 방지 (이동속도 0일 때)
 		if(groundChecker.isGrounded && groundChecker.isSlope && Mathf.Abs(inputVec.x) < 0.01f 
 			&& rigid.linearVelocityY <= 0.01f && slopeJumpProtectionTimer <= 0f)
 		{
@@ -194,7 +251,7 @@ public class PlayerMovement : MonoBehaviour
 			velY = 0f;
 		}
 
-		// 오르막에서 붕 뜸 방지
+		// 경사로 이동 처리
 		else if(groundChecker.isGrounded && groundChecker.isSlope && velY > 0.05f)
 		{
 			bool isChangingDir = (inputVec.x > 0.01f && rigid.linearVelocityX < -0.01f) ||
@@ -206,13 +263,13 @@ public class PlayerMovement : MonoBehaviour
 			}
 		}
 
-		// 오르막에서 나와 평지로 올라왔을 때 덜덜 떨리는 현상 방지
+		// 평지 올라갈 때 Y속도 튀는 현상 방지
 		else if(groundChecker.isGrounded && !groundChecker.isSlope && velY > 0.05f)
 		{
 			velY = 0f;
 		}
 
-		// 물리 적용
+		// 이동 적용
 		rigid.linearVelocity = new Vector2(targetSpeed, velY);
 
 		if(inputVec.x > 0f)
@@ -228,39 +285,65 @@ public class PlayerMovement : MonoBehaviour
 	private void Jump()	// 플레이어 점프
 	{
 		rigid.linearVelocity = new Vector2(rigid.linearVelocityX, stats.jumpForce);
-
 		slopeJumpProtectionTimer = 0.2f;
 	}
 
-	// 중력 추가 적용, 가변 낙하 중력
+	private void ExecuteWallJump() // 벽 밀어내기 점프
+	{
+		IsWallJumping = true;
+		wallJumpTimer = wallJumpDuration;
+
+		float jumpDir = wallDetector != null ? -wallDetector.WallDirection : (transform.eulerAngles.y == 0f ? -1f : 1f);
+		rigid.linearVelocity = new Vector2(jumpDir * wallJumpForce.x, wallJumpForce.y);
+
+		if (jumpDir > 0f)
+		{
+			transform.eulerAngles = Vector3.zero;
+		}
+		else if (jumpDir < 0f)
+		{
+			transform.eulerAngles = new Vector3(0f, 180f, 0f);
+		}
+
+		IsWallSliding = false;
+	}
+
+	private void ExecuteWallPushJump() // 벽 밀기 수직 상승 점프
+	{
+		rigid.linearVelocity = new Vector2(rigid.linearVelocityX, stats.jumpForce * wallPushJumpMultiplier);
+		IsWallJumping = true;
+		wallJumpTimer = wallJumpDuration;
+		slopeJumpProtectionTimer = 0.2f;
+	}
+
+	// 중력 추가 및 속도 제어
 	private void ApplyGravityModifiers()
 	{
 		if(groundChecker.isGrounded)
 		{
-			// 땅에 서있을 경우 + 경사면일 경우 미끄러지지 않게 중력 제거
+			// 경사로 + 수평 이동 안할 때 중력 잠금
 			float targetSpeed = isCrouchPressed ? 0 : (inputVec.x * stats.moveSpeed);
 			if(groundChecker.isSlope && Mathf.Abs(targetSpeed) < 0.01f 
 				&& rigid.linearVelocityY <= 0.01f
 				&& slopeJumpProtectionTimer <= 0f
 				&& (attack == null || !attack.IsAttacking))
 			{
-				// x축, z축 값 고정
+				// x축, z축 고정
 				rigid.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionX;
 			}
 			else
 			{
-				// z축 값 (기본값) 고정
+				// z축 고정 (기본값)
 				rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 			}
 		}
-		// TODO: 벽 이동. 기본중력 X 벽에 붙어있을 경우 정해진 중력에 맞춰 떨어지기 (+ 애니메이션)
-		//else if (wallMovement != null && wallMovement.IsWallSliding)
-		//{
-		//	rigid.gravityScale = defaultGravityScale; // 벽에 매달려 비벼 떨어질 때는 기본 중력 적용
-		//}
+		else if (IsWallSliding)
+		{
+			rigid.gravityScale = defaultGravityScale;
+		}
 		else
 		{
-			// 가변 중력
+			// 공중 중력
 			if(rigid.linearVelocityY < 0f)
 			{
 				rigid.gravityScale = fallMultiplier;
@@ -282,18 +365,8 @@ public class PlayerMovement : MonoBehaviour
 		}
 		else
 		{
-			jumpBufferCounter = 0;		// 손가락 떼면 0으로
+			jumpBufferCounter = 0;		// 손뗴면 바로 0으로
 		}
-
-		//if (climb.isWall)
-		//{
-		//	climb.WallJump();
-		//	return;
-		//}
-		//if (!groundChecker.IsGrounded) return;
-
-		//rigid.AddForce(Vector2.up * GameManager.Instance.playerStatsRuntime.jumpForce, ForceMode2D.Impulse);
-		//groundChecker.IsGrounded = false;
 	}
 
 	public void TriggerRollInput()
@@ -314,34 +387,16 @@ public class PlayerMovement : MonoBehaviour
 		isCrouchPressed = isPressed;
 	}
 
-	//public void HandleMovement()
- //   {
- //       float targetSpeed = inputVec.x * moveSpeed;
- //       float speedDiff = targetSpeed - rigid.linearVelocity.x;
- //       float accelRate = (Mathf.Abs(inputVec.x) > 0.01f) ? acceleration : deceleration;
+	public void UpdateSprite()
+	{
+		// 방향 전환
+		if (inputVec.x > 0) transform.eulerAngles = Vector3.zero;
+		else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+	}
 
- //       rigid.AddForce(Vector2.right * speedDiff * accelRate);
- //       rigid.linearVelocity = new Vector2(
- //           Mathf.Clamp(rigid.linearVelocity.x, -moveSpeed, moveSpeed),
- //           rigid.linearVelocity.y);
- //   }
-
-    public void UpdateSprite()
-    {
-        // 방향 전환
-        if (inputVec.x > 0) transform.eulerAngles = Vector3.zero;
-        else if (inputVec.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
-
-        // x축 고정
-        //if (inputVec.x == 0)
-        //    rigid.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-        //else
-        //    rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-    }
-
-    public void UpdateSprite(Vector2 dir)
-    {
-        if (dir.x > 0) transform.eulerAngles = Vector3.zero;
-        else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
-    }
+	public void UpdateSprite(Vector2 dir)
+	{
+		if (dir.x > 0) transform.eulerAngles = Vector3.zero;
+		else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+	}
 }

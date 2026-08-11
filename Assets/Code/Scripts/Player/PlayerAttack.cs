@@ -76,12 +76,16 @@ public class PlayerAttack : MonoBehaviour
 		Vector2 targetPos = startPos + dir * targetDist;
 		// -> 바닥이나 경사에 있을 경우에는 공격 거리만큼 이동
 		// -> 공격을 하거나 점프해서 떠 있을 경우 매우 짧은 거리로 이동
-		bool isSlow = false;	// 슬로우 여부
+		bool isSlow = false;    // 슬로우 여부
+								
+		float skin = 0.05f;
+
+		Vector2 castStart = startPos + dir * skin;
 
 		LayerMask mask = ~LayerMask.GetMask(LayerName.player, LayerName.oneWayPlatform, LayerName.crackObj);
 		Vector2 boxSize = Vector2.Scale(GetComponent<BoxCollider2D>().size, transform.lossyScale);
 		RaycastHit2D hit = Physics2D.BoxCast(
-			rigid.position,
+			castStart,
 			boxSize,
 			transform.eulerAngles.z,
 			dir,
@@ -90,7 +94,7 @@ public class PlayerAttack : MonoBehaviour
 		);
 		LayerMask crackMask = LayerMask.GetMask(LayerName.crackObj);
 		RaycastHit2D crackHit = Physics2D.Raycast(
-				rigid.position,
+				castStart,
 				dir,
 				stats.attackDist,
 				crackMask
@@ -110,8 +114,6 @@ public class PlayerAttack : MonoBehaviour
 		{
 			Collider2D hitCol = hit.collider;
 
-			GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
-
 			if (hitCol.CompareTag(TagName.enemy))    // 적
 			{
 				if (Vector2.Distance(rigid.position, hitCol.transform.position) >= stats.attackDist
@@ -123,14 +125,17 @@ public class PlayerAttack : MonoBehaviour
 			}
 			else if (hitCol.CompareTag(TagName.door))   // 문
 			{
-				if (hitCol.TryGetComponent<IInteractionObject>(out IInteractionObject coll))
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+
+				if (hitCol.TryGetComponent(out DoorController door))
 				{
-					coll.OnInteract();  // 상호작용
+					door.OnOpen();  // 상호작용
 				}
-				targetDist = 0f;
 			}
 			else if (hitCol.CompareTag(TagName.bullet)) // 총알
 			{
+				GameManager.Instance.cameraShake.ShakeForSeconds(); // 카메라 쉐이킹
+
 				// 총알 패링
 				if (hit.transform.TryGetComponent<EnemyBullet>(out var bullet))
 				{

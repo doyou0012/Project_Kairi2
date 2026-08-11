@@ -52,16 +52,16 @@ namespace Globals
 	}
 	public static class PlayerAnimName   // 플레이어
 	{
-		public const string idle			= "Dragon_Idle";
+		public const string idle		= "Dragon_Idle";
 		public const string run			= "Dragon_Run";
 		public const string attack		= "Dragon_Attack";
-		public const string landDown		= "Dragon_LandDown";
+		public const string down		= "Dragon_Down";
 		public const string landing		= "Dragon_Landing";
 		public const string landUp		= "Dragon_LandUp";
-		public const string slide			= "Dragon_Slide";
-		public const string roll			= "Dragon_Roll";
+		public const string slide		= "Dragon_Slide";
+		public const string roll		= "Dragon_Roll";
 		public const string redgeClimb	= "Dragon_RedgeClimb";
-		public const string climb			= "Dragon_Climb";
+		public const string climb		= "Dragon_Climb";
 		public const string climbSlide	= "Dragon_ClimbSlide";
 	}
 

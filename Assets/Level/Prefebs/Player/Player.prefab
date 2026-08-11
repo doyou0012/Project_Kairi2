@@ -21,8 +21,8 @@ GameObject:
   - component: {fileID: 6822659655701916194}
   - component: {fileID: 8045384690358384566}
   - component: {fileID: 5672697747878628885}
-  - component: {fileID: 4331877000223435740}
   - component: {fileID: 3781036145344550571}
+  - component: {fileID: 7589425118561491321}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -39,7 +39,7 @@ Transform:
   m_GameObject: {fileID: 1004635024995496750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -95.8, y: -15.9, z: 0}
+  m_LocalPosition: {x: -95.392, y: -15.911, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -259,6 +259,10 @@ MonoBehaviour:
   jumpBufferTime: 0.15
   fallMultiplier: 3
   lowJumpMultiplier: 8
+  wallPushJumpMultiplier: 1.5
+  wallSlideSpeed: 2
+  wallJumpForce: {x: 50, y: 12}
+  wallJumpDuration: 1
   isCrouchPressed: 0
   dashEffectPref: {fileID: 5987833738862787875, guid: 37829155aa2b67d4598f819e2897e979, type: 3}
   dashEffectOffset: {x: 0, y: -0.8, z: 0}
@@ -356,29 +360,6 @@ MonoBehaviour:
   slowMaxGauge: 3
   slowDecreaseRate: 1
   slowRecoverRate: 0.5
---- !u!114 &4331877000223435740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1004635024995496750}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91411a53e6110c2489f64730f22e377f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerClimb
-  wallJumpForce: {x: 10, y: 15}
-  wallJumpDuration: 0.15
-  wallCheckDistance: 0.5
-  wallChk: {fileID: 8239587164447550960}
-  isWall: 0
-  w_Layer:
-    serializedVersion: 2
-    m_Bits: 512
-  isWallJump: 0
-  isWallLeft: 0
-  isWallRight: 0
 --- !u!114 &3781036145344550571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +380,22 @@ MonoBehaviour:
   lineWidth: 0.5
   isActive: 0
   canUseSkill: 1
+--- !u!114 &7589425118561491321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004635024995496750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6246a57c0fbeaed4abc86158841743d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallDetector
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  wallCheckDistance: 0.3
 --- !u!1 &1011704935546293883
 GameObject:
   m_ObjectHideFlags: 0

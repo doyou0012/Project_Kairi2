@@ -1,4 +1,4 @@
-ï»¿// PlayerController.cs
+// PlayerController.cs
 using Globals;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,62 +10,66 @@ public class PlayerController : MonoBehaviour
 	private PlayerAttack attack;
 	private PlayerGroundChecker groundChecker;
 	private PlayerSlowMode slowMode;
-	private PlayerClimb climb;
 	private PlayerSkillAttack skillAttack;
 	private float originalGravity;
 
+	private Collision2D collidedObj;     // ÇÃ·¹ÀÌ¾î¿Í »óÈ£ÀÛ¿ë ÇÒ ¿ÀºêÁ§Æ®
+	private Animator anim;      // ¾Ö´Ï¸ŞÀÌÅÍ
+
 	private void Awake()
 	{
+		anim = GetComponent<Animator>();
 		rigid = GetComponent<Rigidbody2D>();
 		movement = GetComponent<PlayerMovement>();
 		attack = GetComponent<PlayerAttack>();
 		slowMode = GetComponent<PlayerSlowMode>();
-		climb = GetComponent<PlayerClimb>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
-    }
+	}
+
+	private void Update()
+	{
+		UpdateAnimation();
+
+		// ¹® »óÈ£ÀÛ¿ë
+		if (collidedObj != null)
+		{
+			if (collidedObj.transform.TryGetComponent(out DoorController door))
+			{
+				if (movement.inputVec.x != 0)
+				{
+					print($"Try Open");
+					if (door.TryOpen())     // ¹® ¿­±â ½ÃµµÇØ¼­ ¼º°øÇÒ °æ¿ì ¿ÀºêÁ§Æ® ¾ø¾Ö±â
+					{
+						collidedObj = null;
+					}
+				}
+			}
+		}
+	}
 
 	private void Start()
 	{
 		originalGravity = rigid.gravityScale;
-		//movement.Init();
 	}
 
 	private void OnMove(InputValue val)
 	{
 		if (GlobalUtil.IsNullScript(movement)) return;
-		//if (climb.isWallJump) return;	// ë²½ì—ì„œ ì í”„ ì¤‘ì¼ ê²½ìš° ì´ë™ X
-		//if (dash.isDashing)
-		//{
-		//	movement.inputVec = Vector2.zero;
-		//	return;
-		//}
-
-		//animator.Play(PlayerAnimName.run);
-		//movement.inputVec = val.Get<Vector2>();
-		//dash.TryDash();
 
 		Vector2 inputVec = val.Get<Vector2>();
 
 		bool hadNoHorizontal = Mathf.Abs(movement.inputVec.x) < 0.01f;
 		bool hasHorizontal = Mathf.Abs(inputVec.x) > 0.01f;
 
+		// ±¸¸£±â
 		if (hadNoHorizontal && hasHorizontal && movement.isCrouchPressed)
 		{
-			movement.TriggerRollInput(); // êµ¬ë¥´ê¸° ì¤€ë¹„
+			movement.TriggerRollInput();
 		}
 
-		// Movementì— ì „ë‹¬í•´ì„œ í”Œë ˆì´ì–´ê°€ ìˆ˜í‰ ì´ë™í•˜ë„ë¡ ì „ë‹¬
 		movement.inputVec = inputVec;
 	}
-
-	//private void OnReleaseMove(InputValue val)
-	//{
-	//	if (IsNullScript(movement)) return;
-
-	//	if (dash.isDashing) return;
-	//	animator.Play(PlayerAnimName.idle);
-	//}
 
 	private void OnJump(InputValue val)
 	{
@@ -78,24 +82,13 @@ public class PlayerController : MonoBehaviour
 	{
 		if (GlobalUtil.IsNullScript(movement)) return;
 
-		if(val.isPressed)
+		if (val.isPressed)
 		{
-			//if (!groundChecker.IsGrounded) return;
-			//dash.isDashReady = true;
-			//animator.Play(PlayerAnimName.landDown);
-			//if (groundChecker.IsGroundedOneway)
-			//	transform.position += Vector3.down * 0.1f;
-			//else
-			//	dash.TryDash();
 			movement.SetCrouchInput(val.isPressed);
-			movement.TriggerRollInput(); // êµ¬ë¥´ê¸° ì¤€ë¹„
+			movement.TriggerRollInput();
 		}
 		else
 		{
-			//if (dash.isDashing) return;
-			//dash.isDashReady = false;
-			//animator.Play(PlayerAnimName.landUp);
-
 			movement.SetCrouchInput(false);
 		}
 	}
@@ -103,17 +96,17 @@ public class PlayerController : MonoBehaviour
 	private void OnAttack(InputValue val)
 	{
 		if (GlobalUtil.IsNullScript(attack)) return;
-		if(val.isPressed)
+		if (val.isPressed)
 		{
-			rigid.gravityScale = 1f;	// ì¤‘ë ¥ê°’ ì¡°ì ˆ
+			rigid.gravityScale = 1f;
 			attack.TryAttack();
-			rigid.gravityScale = originalGravity;	// ë³µêµ¬
+			rigid.gravityScale = originalGravity;
 		}
 	}
 
 	private void OnSkillAttack(InputValue val)
 	{
-		if(val.isPressed)
+		if (val.isPressed)
 		{
 			skillAttack.EnterSkill();
 		}
@@ -125,7 +118,6 @@ public class PlayerController : MonoBehaviour
 
 	private void OnSlow(InputValue val)
 	{
-		// í”Œë ˆì´ì–´ ì‚¬ë§ ì‹œ ìŠ¬ë¡œìš° X
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
 			return;
 
@@ -137,24 +129,17 @@ public class PlayerController : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D col)
 	{
-		groundChecker.CheckGround();      // ë•… ì²´í¬
+		groundChecker.CheckGround();
 
-		// ë¬¸ ì—´ê¸°
 		if (col.transform.CompareTag(TagName.door))
 		{
-			if (col.transform.TryGetComponent(out IInteractionObject door))
-			{
-				// í”Œë ˆì´ì–´ê°€ ë¬¸ì— ë¶™ì–´ì„œ ì›€ì§ì¼ ë•Œ ë¬¸ ì—´ê¸°
-				if (movement.inputVec.x != 0)
-				{
-					door.OnInteract();
-				}
-			}
+			collidedObj = col;
 		}
 	}
+
 	private void OnCollisionStay2D(Collision2D col)
 	{
-		groundChecker.CheckGround();      // ë•… ì²´í¬
+		groundChecker.CheckGround();
 	}
 
 	private void OnCollisionExit2D(Collision2D col)
@@ -163,9 +148,41 @@ public class PlayerController : MonoBehaviour
 			groundChecker.isGrounded = false;
 	}
 
-	//private void OnTriggerEnter2D(Collider2D col)
-	//{
-	//	if (col.CompareTag(TagName.bullet))
-	//		col.GetComponent<EnemyBullet>().DeflectBullet();
-	//}
+	private void UpdateAnimation()
+	{
+		if (anim == null || movement == null || groundChecker == null)
+			return;
+
+		string animationName;
+
+		// ´ë½Ã/½½¶óÀÌµù Áß¿¡´Â Player_Slide¸¦ ¿ì¼± ½ÇÇàÇÕ´Ï´Ù.
+		if (movement.isDash)
+		{
+			print($"dash animation");
+			animationName = PlayerAnimName.roll;
+		}
+		// ¶¥¿¡ ÀÖ°í Crouch ÀÔ·ÂÀ» ´©¸£°í ÀÖ´Â µ¿¾È Player_Crouch¸¦ ½ÇÇàÇÕ´Ï´Ù.
+		else if (groundChecker.isGrounded && movement.isCrouchPressed)
+		{
+			print($"down animation");
+			animationName = PlayerAnimName.down;
+		}
+		// ¶¥¿¡¼­ ÁÂ¿ì·Î ¿òÁ÷ÀÌ°í ÀÖÀ¸¸é Player_RunÀ» ½ÇÇàÇÕ´Ï´Ù.
+		else if (groundChecker.isGrounded && Mathf.Abs(movement.inputVec.x) > 0.01f)
+		{
+			animationName = PlayerAnimName.run;
+		}
+		// À§ Á¶°ÇÀÌ ¸ğµÎ ¾Æ´Ï¸é Player_IdleÀ» ±âº»À¸·Î ½ÇÇàÇÕ´Ï´Ù.
+		else
+		{
+			animationName = PlayerAnimName.idle;
+		}
+
+		// °°Àº ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ¸Å ÇÁ·¹ÀÓ ´Ù½Ã ½ÃÀÛÇÏÁö ¾Êµµ·Ï
+		// ÇöÀç »óÅÂ°¡ ´Ù¸¦ ¶§¸¸ Play¸¦ È£ÃâÇÕ´Ï´Ù.
+		if (!anim.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+		{
+			anim.Play(animationName, 0, 0f);
+		}
+	}
 }
