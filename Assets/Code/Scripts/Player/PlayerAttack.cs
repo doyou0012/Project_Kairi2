@@ -140,7 +140,7 @@ public class PlayerAttack : MonoBehaviour
 				if (hit.transform.TryGetComponent<EnemyBullet>(out var bullet))
 				{
 					print($"Hit Bullet {bullet.ToString()}");
-					bullet.DeflectBullet(mousePos);     // 패링
+					//bullet.DeflectBullet(mousePos);     // TODO: 패링
 
 					targetDist = 0f;
 				}
