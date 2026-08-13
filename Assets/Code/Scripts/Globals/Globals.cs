@@ -54,6 +54,7 @@ namespace Globals
 	{
 		public const string idle		= "Dragon_Idle";
 		public const string run			= "Dragon_Run";
+		public const string jump		= "Dragon_Jump";
 		public const string attack		= "Dragon_Attack";
 		public const string down		= "Dragon_Down";
 		public const string landing		= "Dragon_Landing";
