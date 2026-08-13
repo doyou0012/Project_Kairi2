@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// 글로벌 변수를 관리하는 파일
@@ -52,18 +52,20 @@ namespace Globals
 	}
 	public static class PlayerAnimName   // 플레이어
 	{
-		public const string idle		= "Dragon_Idle";
-		public const string run			= "Dragon_Run";
-		public const string jump		= "Dragon_Jump";
-		public const string attack		= "Dragon_Attack";
-		public const string down		= "Dragon_Down";
-		public const string landing		= "Dragon_Landing";
-		public const string landUp		= "Dragon_LandUp";
-		public const string slide		= "Dragon_Slide";
-		public const string roll		= "Dragon_Roll";
-		public const string redgeClimb	= "Dragon_RedgeClimb";
-		public const string climb		= "Dragon_Climb";
-		public const string climbSlide	= "Dragon_ClimbSlide";
+		public const string idle		= "Player_Idle";
+		public const string run			= "Player_Run";
+		public const string jump		= "Player_Jump";
+		public const string attack		= "Player_Attack";
+		public const string down		= "Player_Down";
+		public const string landing		= "Player_Landing";
+		public const string landUp		= "Player_LandUp";
+		public const string slide		= "Player_Slide";
+		public const string roll		= "Player_Roll";
+		public const string redgeClimb	= "Player_RedgeClimb";
+		public const string climb		= "Player_Climb";
+		public const string climbSlide	= "Player_ClimbSlide";
+		public const string die			= "Player_Die";
+		public const string skill		= "Dragon_Skill";
 	}
 
 	// 프리펩 이름 관련 클래스

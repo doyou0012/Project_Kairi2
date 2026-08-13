@@ -11,6 +11,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
 	[SerializeField] private Vector2 spawnPoint;
 
+	public bool isDead = false;
+
 	private Rigidbody2D rigid;
 	private PlayerMovement movement;
 	private PlayerSlowMode slowMode;
@@ -31,6 +33,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
 		{
+			isDead = true;
 			slowMode.ExitSlow();
 			StartCoroutine(PlayerDie());
 		}
@@ -60,5 +63,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		blackCanvas.gameObject.SetActive(false);
 		glitchGlobalVolume.SetActive(false);
 		tvGlobalVolume.SetActive(false);
+		isDead = false;
 	}
 }
