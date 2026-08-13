@@ -23,7 +23,8 @@ public class KimEnemyAttack : IKimEnemyState
         Debug.Log("Kim 적 캐릭터가 플레이어에게 근접 공격을 개시합니다!");
 
         // 1단계 Globals에 등록한 정답 공격 글자("Enemy_Shot1")를 꺼내 유니티 애니메이터 컴포넌트에게 공격 동작 재생을 지시합니다.
-        enemy.anim.Play(KimEnemyAnimName.attack);
+        // 이름을 바꾸면 근접공격이 나갑니다~
+        enemy.anim.Play(KimEnemyAnimName.attack);// 이부분을 바꾸면 됨 
 
         // 공격하는 찰나 동안 뒤로 미끄러지지 않도록, 발바닥을 본드로 붙이듯이 수평 이동 속도를 즉각 0으로 강제 원복합니다.
         enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);
