@@ -13,8 +13,6 @@ public class PlayerAttack : MonoBehaviour
 
 	[Tooltip("칼날이 쓸고 지나가는 타격 범위의 둥근 원(Radius) 반경 크기")]
 	[SerializeField] private float attackRadius = 1.8f;
-	[Header("패링 설정")]
-	private Animator anim;        // 캐릭터 팔다리 모션을 바꿀 애니메이터 컴포넌트
 
 	[Header("이펙트")]
 	[SerializeField]
@@ -35,7 +33,6 @@ public class PlayerAttack : MonoBehaviour
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		slowMode = GetComponent<PlayerSlowMode>();
-		anim = GetComponent<Animator>();
 		groundChk = GetComponent<PlayerGroundChecker>();
 	}
 
@@ -54,12 +51,6 @@ public class PlayerAttack : MonoBehaviour
 		if (IsAttacking) return;
 
 		IsAttacking = true;
-
-		// 애니메이션 처리
-		if (anim != null)
-		{
-			anim.SetTrigger("attack");
-		}
 
 		StartCoroutine(Attack());
 	}

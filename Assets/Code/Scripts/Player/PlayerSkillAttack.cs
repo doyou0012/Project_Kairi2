@@ -8,17 +8,17 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerSkillAttack : MonoBehaviour
 {
-	[Header("½ºÅ³ »ç¿ë ½Ã ½¦ÀÌÅ· ¹× ½½·Î¿ì ½Ã°£")]
+	[Header("ìŠ¤í‚¬ ì‚¬ìš© ì‹œ ì‰ì´í‚¹ ë° ìŠ¬ë¡œìš° ì‹œê°„")]
 	[SerializeField] private float hitStopTime = 0.5f;
-	[Header("ÇÃ·¹ÀÌ¾î ½ºÅ³ »ç¿ë ÃÖ¼Ò °Å¸®")]
+	[Header("í”Œë ˆì´ì–´ ìŠ¤í‚¬ ì‚¬ìš© ìµœì†Œ ê±°ë¦¬")]
 	[SerializeField] private float skillMinRadius = 1f;
-	[Header("ÇÃ·¹ÀÌ¾î ½ºÅ³ »ç¿ë ÃÖ´ë °Å¸®")]
+	[Header("í”Œë ˆì´ì–´ ìŠ¤í‚¬ ì‚¬ìš© ìµœëŒ€ ê±°ë¦¬")]
 	[SerializeField] private float skillMaxRadius = 10.4f;
-	[Header("½ºÅ³ »ç¿ë ½Ã º¸ÀÌ´Â Á¡")]
+	[Header("ìŠ¤í‚¬ ì‚¬ìš© ì‹œ ë³´ì´ëŠ” ì ")]
 	[SerializeField] private GameObject Dot;
-	[Header("½ºÅ³ »ç¿ë ½Ã º¸ÀÌ´Â ¼±")]
+	[Header("ìŠ¤í‚¬ ì‚¬ìš© ì‹œ ë³´ì´ëŠ” ì„ ")]
 	[SerializeField] private GameObject LimitLine;
-	[Header("¼± µÎ²²")]
+	[Header("ì„  ë‘ê»˜")]
 	[SerializeField] private float lineWidth = 0.05f;
 
 	private Animator anim;
@@ -30,6 +30,7 @@ public class PlayerSkillAttack : MonoBehaviour
 	private Vector3 targetPos;
 	public bool isActive = false;
 	public bool canUseSkill = true;
+	public bool IsSkillAttacking { get; private set; }
 
 	private void Awake()
 	{
@@ -41,9 +42,9 @@ public class PlayerSkillAttack : MonoBehaviour
 	{
 		mainCam = Camera.main;
 		DotObj = Instantiate(Dot);
-		DotObj.SetActive(false);	// Á¡ ¾È º¸ÀÌ°Ô
+		DotObj.SetActive(false);	// ì  ì•ˆ ë³´ì´ê²Œ
 		LineObj = Instantiate(LimitLine);
-		LineObj.SetActive(false);	// ¼± ¾È º¸ÀÌ°Ô
+		LineObj.SetActive(false);	// ì„  ì•ˆ ë³´ì´ê²Œ
 		SetLine();
 	}
 
@@ -58,12 +59,12 @@ public class PlayerSkillAttack : MonoBehaviour
 
 	public void EnterSkill()
 	{
-		GetComponent<PlayerMovement>().canMove = false;		// ¿òÁ÷ÀÓ Á¦ÇÑ
-		GetComponent<PlayerAttack>().canAttack = false;		// °ø°İ Á¦ÇÑ
+		GetComponent<PlayerMovement>().canMove = false;		// ì›€ì§ì„ ì œí•œ
+		GetComponent<PlayerAttack>().canAttack = false;		// ê³µê²© ì œí•œ
 
 		if (Dot == null)
 		{
-			Debug.LogWarning("Dot ¿ÀºêÁ§Æ® ¾øÀ½");
+			Debug.LogWarning("Dot ì˜¤ë¸Œì íŠ¸ ì—†ìŒ");
 			return;
 		}
 		isActive = true;
@@ -79,32 +80,32 @@ public class PlayerSkillAttack : MonoBehaviour
 		targetPos = mainCam.ScreenToWorldPoint(Input.mousePosition);
 		targetPos.z = DotObj.transform.position.z;
 
-		// Dot ¹æÇâ ÀüÈ¯
+		// Dot ë°©í–¥ ì „í™˜
 		Vector2 dir = (targetPos - transform.position).normalized;
 		Vector3 scale = DotObj.transform.localScale;
 
 		if (dir.x > 0)
-			scale.x = Mathf.Abs(scale.x);      // ¿À¸¥ÂÊ
+			scale.x = Mathf.Abs(scale.x);      // ì˜¤ë¥¸ìª½
 		else if (dir.x < 0)
-			scale.x = -Mathf.Abs(scale.x);     // ¿ŞÂÊ
+			scale.x = -Mathf.Abs(scale.x);     // ì™¼ìª½
 
 		DotObj.transform.localScale = scale;
 
-		// ¸ñÇ¥ °Å¸® °è»ê
+		// ëª©í‘œ ê±°ë¦¬ ê³„ì‚°
 		float dotDist = Vector2.Distance(transform.position, targetPos);
 
-		if (dotDist < skillMinRadius)   // ÃÖ¼Ò°Å¸® ¹Ì¸¸ÀÏ °æ¿ì ¼û±è
+		if (dotDist < skillMinRadius)   // ìµœì†Œê±°ë¦¬ ë¯¸ë§Œì¼ ê²½ìš° ìˆ¨ê¹€
 		{
 			HideAll();
 		}
 		else
 		{
-			// Dot À§Ä¡¸¦ BoxCast °á°ú·Î °è»ê
+			// Dot ìœ„ì¹˜ë¥¼ BoxCast ê²°ê³¼ë¡œ ê³„ì‚°
 			DotObj.transform.position = GetSkillTargetPosition(targetPos);
 			ShowLine();
 		}
 
-		// ¼± ¿ÀºêÁ§Æ® ¼³Á¤
+		// ì„  ì˜¤ë¸Œì íŠ¸ ì„¤ì •
 		if (LineObj.transform.position != transform.position)
 			LineObj.transform.position = transform.position;
 	}
@@ -135,10 +136,11 @@ public class PlayerSkillAttack : MonoBehaviour
 		LineObj.SetActive(active);
 	}
 
-	// ½ºÅ³ »ç¿ë
+	// ìŠ¤í‚¬ ì‚¬ìš©
 	private IEnumerator SkillAttack()
 	{
-		Vector2 targetPos = GetSkillTargetPosition(DotObj.transform.position);	// Dot À§Ä¡¸¦ ¸ñÇ¥ À§Ä¡·Î
+		IsSkillAttacking = true;
+		Vector2 targetPos = GetSkillTargetPosition(DotObj.transform.position);	// Dot ìœ„ì¹˜ë¥¼ ëª©í‘œ ìœ„ì¹˜ë¡œ
 		Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
 
 		LayerMask mask = LayerMask.GetMask(
@@ -153,7 +155,7 @@ public class PlayerSkillAttack : MonoBehaviour
 			distance,
 			mask);
 
-		// °ø°İ ÆÇÁ¤
+		// ê³µê²© íŒì •
 		foreach (RaycastHit2D hit in hits)
 		{
 			if (hit.transform.TryGetComponent<IDamageable>(out var damage))
@@ -163,24 +165,26 @@ public class PlayerSkillAttack : MonoBehaviour
 				obj.Crack();
 		}
 
-		slowMode.panel?.SetActive(false);   // ½½·Î¿ì È­¸é Á¦°Å
+		slowMode.panel?.SetActive(false);   // ìŠ¬ë¡œìš° í™”ë©´ ì œê±°
 
-		// ÀÌµ¿ ¿Ï·á±îÁö ±â´Ù¸²
+		// ì´ë™ ì™„ë£Œê¹Œì§€ ê¸°ë‹¤ë¦¼
 		yield return StartCoroutine(MoveTargetPos(targetPos));
 
-		// ½½·Î¿ì + Ä«¸Ş¶ó ½¦ÀÌÅ©
+		// ìŠ¬ë¡œìš° + ì¹´ë©”ë¼ ì‰ì´í¬
 		if(hits.Length > 0f)
 		{
-			// ½¦ÀÌÅ©
+			// ì‰ì´í¬
 			GameManager.Instance.cameraShake.ShakeForSeconds();
 
 			slowMode.EnterOnlySlow();
 
-			// È÷Æ®½ºÅé(Àá½Ã ¸ØÃã)
+			// íˆíŠ¸ìŠ¤í†±(ì ì‹œ ë©ˆì¶¤)
 			yield return new WaitForSecondsRealtime(hitStopTime);
 
 			slowMode.ExitSlow();
 		}
+
+		IsSkillAttacking = false;
 	}
 
 	private IEnumerator MoveTargetPos(Vector2 target)
@@ -200,7 +204,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		transform.position = target;
 	}
 
-	// ¸¶¿ì½º À§Ä¡¸¦ ±âÁØÀ¸·Î ½ÇÁ¦ ÀÌµ¿ °¡´ÉÇÑ À§Ä¡¸¦ ¹İÈ¯
+	// ë§ˆìš°ìŠ¤ ìœ„ì¹˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì‹¤ì œ ì´ë™ ê°€ëŠ¥í•œ ìœ„ì¹˜ë¥¼ ë°˜í™˜
 	private Vector2 GetSkillTargetPosition(Vector2 desiredPos)
 	{
 		Vector2 startPos = transform.position;
@@ -208,7 +212,7 @@ public class PlayerSkillAttack : MonoBehaviour
 
 		float mouseDist = Vector2.Distance(startPos, desiredPos);
 
-		// ÃÖ´ë°Å¸® Á¦ÇÑ
+		// ìµœëŒ€ê±°ë¦¬ ì œí•œ
 		float castDist = Mathf.Min(mouseDist, skillMaxRadius);
 
 		Vector2 boxSize = Vector2.Scale(
@@ -231,21 +235,21 @@ public class PlayerSkillAttack : MonoBehaviour
 			castDist,
 			obstacleMask);
 
-		// º®ÀÌ ÀÖÀ¸¸é º® ¾Õ¿¡¼­ ¸ØÃã
+		// ë²½ì´ ìˆìœ¼ë©´ ë²½ ì•ì—ì„œ ë©ˆì¶¤
 		if (hit)
 		{
 			Debug.Log($"Hit : {hit.collider.name}, distance : {hit.distance}");
 			return startPos + dir * hit.distance;
 		}
 
-		// º®ÀÌ ¾øÀ¸¸é ÃÖ´ë°Å¸® ¶Ç´Â ¸¶¿ì½º À§Ä¡
+		// ë²½ì´ ì—†ìœ¼ë©´ ìµœëŒ€ê±°ë¦¬ ë˜ëŠ” ë§ˆìš°ìŠ¤ ìœ„ì¹˜
 		return startPos + dir * castDist;
 	}
 
-	// ¸¶¿ì½º ¶À°ú µ¿½Ã¿¡ ½ºÅ³ ³ª°¡±â ¹× »ç¿ë
+	// ë§ˆìš°ìŠ¤ ë—Œê³¼ ë™ì‹œì— ìŠ¤í‚¬ ë‚˜ê°€ê¸° ë° ì‚¬ìš©
 	public void ExitSkill()
 	{
-		anim.Play("Dragon_Skill");   // ¾Ö´Ï¸ŞÀÌ¼Ç
+		anim.Play("Dragon_Skill");   // ì• ë‹ˆë©”ì´ì…˜
 
 		if (canUseSkill) StartCoroutine(SkillAttack());
 		isActive = false;

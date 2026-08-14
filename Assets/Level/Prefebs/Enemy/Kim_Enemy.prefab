@@ -41,10 +41,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4330936944993038618}
   - component: {fileID: 8433684974925565894}
-  - component: {fileID: 9056530463596353783}
   - component: {fileID: 4195297255366449886}
   - component: {fileID: 5652832289840935325}
   - component: {fileID: 9012174372966303361}
+  - component: {fileID: 1830994220551899703}
   m_Layer: 8
   m_Name: Kim_Enemy
   m_TagString: Enemy
@@ -127,25 +127,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &9056530463596353783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859224724594647066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4334226aaba20014b93796b94fbf0397, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KimEnemy
-  enemyStats: {fileID: 11400000, guid: 266e086449143744e868c10a5c7f6a4d, type: 2}
-  rb: {fileID: 0}
-  anim: {fileID: 0}
-  currentHP: 1
-  isRanged: 1
-  bulletPrefab: {fileID: 0}
-  firePoint: {fileID: 3987031845046584516}
 --- !u!50 &4195297255366449886
 Rigidbody2D:
   serializedVersion: 5
@@ -232,3 +213,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1830994220551899703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859224724594647066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f21eea7e0a523c43872fa5e4e1ea66a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  enemyStats: {fileID: 11400000, guid: d261a2f756d4a3a4794f358cd2992135, type: 2}
+  rb: {fileID: 0}
+  anim: {fileID: 0}
+  currentHP: 0
+  isRanged: 0
+  bulletPrefab: {fileID: 717888118542117194, guid: 09b145c6f7e0f7547a69f22cc15b0295, type: 3}
+  firePoint: {fileID: 3987031845046584516}

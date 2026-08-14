@@ -145,7 +145,7 @@ public class Test_KatanaAttack : MonoBehaviour
         foreach (Collider2D bulletCollider in hitBullets)
         {
             // 감지된 탄환에서 탄환 물리 컴포넌트를 조작합니다.
-            KimEnemyBullet bullet = bulletCollider.GetComponent<KimEnemyBullet>();
+            EnemyBullet bullet = bulletCollider.GetComponent<EnemyBullet>();
             if (bullet != null)
             {
                 // 현재 마우스 월드 좌표(크로스헤어 방향)를 추출합니다.

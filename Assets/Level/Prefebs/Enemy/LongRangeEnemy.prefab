@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 426856875468442381}
   - component: {fileID: 6878194989974110664}
   - component: {fileID: 5821663350734350414}
-  - component: {fileID: 7775570397284152736}
   m_Layer: 8
   m_Name: LongRangeEnemy
   m_TagString: Enemy
@@ -36,11 +35,13 @@ Transform:
   m_LocalPosition: {x: -13.48, y: -4.27, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2001038985526770468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2527732010348314365
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -59,6 +60,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,9 +83,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 4723107735738678597, guid: 690d306acfd82be4fb59af4a283be4b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -92,7 +97,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!50 &3843136755672599694
 Rigidbody2D:
@@ -201,7 +205,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f21eea7e0a523c43872fa5e4e1ea66a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyStats: {fileID: 11400000, guid: d261a2f756d4a3a4794f358cd2992135, type: 2}
   rb: {fileID: 0}
+  anim: {fileID: 0}
+  currentHP: 0
+  isRanged: 1
+  bulletPrefab: {fileID: 717888118542117194, guid: 09b145c6f7e0f7547a69f22cc15b0295, type: 3}
+  firePoint: {fileID: 2001038985526770468}
 --- !u!114 &6878194989974110664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54543597a839f924aa37853c9d868391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyStats: {fileID: 11400000, guid: e8e20e9958192e54fbab29d6d2ae6a65, type: 2}
+  _enemyStats: {fileID: 11400000, guid: d261a2f756d4a3a4794f358cd2992135, type: 2}
 --- !u!114 &5821663350734350414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,15 +237,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cede97c92aa81542a64285adf1ca455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7775570397284152736
-MonoBehaviour:
+--- !u!1 &9101774909276811051
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3370538431175618199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef61426651795149b80e1a013a2a9d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2001038985526770468}
+  m_Layer: 8
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2001038985526770468
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9101774909276811051}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.108, y: 3.066, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 74315622514603887}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
