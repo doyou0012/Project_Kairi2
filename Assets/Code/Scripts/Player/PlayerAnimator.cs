@@ -91,7 +91,6 @@ public class PlayerAnimator : MonoBehaviour
 			PlayAnimation(AnimationState.Attack);
 			return;
 		}
-
 		if (skillAttack != null && skillAttack.IsSkillAttacking)
 		{
 			PlayAnimation(AnimationState.Skill);

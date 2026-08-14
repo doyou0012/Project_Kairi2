@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyStats", menuName = "Scriptable Objects/EnemyStats")]
+[CreateAssetMenu(fileName = "KimEnemyStats", menuName = "Scriptable Objects/KimEnemyStats")]
 public class EnemyStats : ScriptableObject
 {
 	[Header("적 정보")]
@@ -29,4 +29,9 @@ public class EnemyStats : ScriptableObject
 	public float AttackRange;
 	[Header("체력")]
 	public float HP;
+	[Header("부채꼴 시야 탐지 설정")]
+	[Tooltip("적이 전방을 바라볼 때 플레이어를 감지할 수 있는 시야의 절반 각도 (예: 60도 설정 시 좌우 합쳐 총 120도 감지)")]
+	public float SightAngle = 60f;
+	[Tooltip("플레이어와 몬스터의 수직 높이 차이 한계 (미터, 이 수치보다 높이 차이가 크면 감지 안 함)")]
+	public float SightHeightLimit = 1.5f;
 }

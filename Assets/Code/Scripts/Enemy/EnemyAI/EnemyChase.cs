@@ -17,7 +17,7 @@ public class EnemyChase : IEnemyState
         Debug.Log("Kim 에너미가 플레이어를 추격 상태(Chase)로 인지하여 달리기를 개시합니다!");
 
         // 애니메이터에 지정된 달리기 모션("Enemy_Run") 플레이
-        enemy.anim.Play(KimEnemyAnimName.chase);
+        enemy.anim.Play(EnemyAnimName.chase);
 
         // 스크립터블 오브젝트 에셋의 추격 속도를 대입합니다.
         if (enemy.enemyStats != null)

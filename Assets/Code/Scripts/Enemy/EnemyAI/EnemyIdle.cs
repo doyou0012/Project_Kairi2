@@ -17,7 +17,7 @@ public class EnemyIdle : IEnemyState
         Debug.Log("Kim 에너미가 대기(Idle) 상태에 들어가 휴식을 취합니다.");
 
         // 애니메이터에 지정된 대기 모션 재생
-        enemy.anim.Play(KimEnemyAnimName.idle);
+        enemy.anim.Play(EnemyAnimName.idle);
 
         // 자리에 멈춰 서도록 물리 속도를 수평 0으로 고정합니다.
         enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);

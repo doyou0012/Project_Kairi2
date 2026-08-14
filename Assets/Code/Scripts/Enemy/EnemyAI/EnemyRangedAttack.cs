@@ -13,7 +13,7 @@ public class EnemyRangedAttack : IEnemyState
         Debug.Log("Kim 에너미가 원거리 공격 상태에 돌입했습니다.");
 
         // 에너미의 공격 애니메이션 재생 (원격 공격 애니메이션 이름으로 교체 가능)
-        enemy.anim.Play(KimEnemyAnimName.attack);
+        enemy.anim.Play(EnemyAnimName.attack);
 
         // 공격하는 동안은 제자리에 고정되도록 강제 속도 0 설정
         enemy.rb.linearVelocity = new Vector2(0f, enemy.rb.linearVelocity.y);

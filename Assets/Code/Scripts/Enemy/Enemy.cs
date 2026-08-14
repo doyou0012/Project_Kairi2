@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     [Header("에너미 능력치 데이터 (ScriptableObject)")]
     [Tooltip("에너미의 기본 스펙 데이터(체력, 이동속도, 감지 범위 등)가 담긴 스크립터블 오브젝트 에셋을 등록합니다.")]
-    public KimEnemyStats enemyStats;
+    public EnemyStats enemyStats;
 
     // 매 프레임 GetComponent를 호출하는 물리 연산 비용을 줄이기 위해 Awake에서 한 번만 찾아 메모리에 캐싱해두는 물리 컴포넌트 변수입니다.
     [HideInInspector] public Rigidbody2D rb;

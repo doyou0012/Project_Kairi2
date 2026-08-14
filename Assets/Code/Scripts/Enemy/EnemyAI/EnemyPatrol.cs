@@ -18,7 +18,7 @@ public class EnemyPatrol : IEnemyState
         Debug.Log("Kim 에너미가 순찰(Patrol) 상태에 진입하여 걷기를 시작합니다.");
 
         // 애니메이터에 지정된 걷기 모션 재생
-        enemy.anim.Play(KimEnemyAnimName.patrol);
+        enemy.anim.Play(EnemyAnimName.patrol);
 
         // 경과 시간 초기화 및 2초에서 3초 사이의 불규칙 순찰 시간 할당
         patrolTimer = 0f;
