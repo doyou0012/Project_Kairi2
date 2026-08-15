@@ -152,6 +152,17 @@ public class Enemy : MonoBehaviour, IDamageable
     /// <param name="attackDamage">피격 시 깎이게 될 데미지 양</param>
     [Header("Kill Slash Effect")]
     [SerializeField] private GameObject killSlashEffectPrefab;
+    [SerializeField] private GameObject bloodEffectPrefab;
+    [SerializeField] private float bloodEffectOffset = 0.5f;
+
+    private void SpawnBloodEffect(Vector2 dir)
+    {
+        if (bloodEffectPrefab == null) return;
+        Vector3 spawnPosition = transform.position + (Vector3)(dir * bloodEffectOffset);
+        GameObject effect = Instantiate(bloodEffectPrefab, spawnPosition, Quaternion.identity);
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        effect.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
 
     private void SpawnKillSlash(Vector2 dir)
     {
@@ -175,7 +186,7 @@ public class Enemy : MonoBehaviour, IDamageable
         if (currentHP <= 0)
         {
             currentHP = 0;
-            SpawnKillSlash(attackDirection); ChangeState(KimEnemyState.DEAD);
+            SpawnKillSlash(attackDirection); SpawnBloodEffect(attackDirection); ChangeState(KimEnemyState.DEAD);
         }
     }
 
