@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// µ¥¹ÌÁö °ü·Ã ÀÎÅÍÆäÀÌ½º
+// ë°ë¯¸ì§€ ê´€ë ¨ ì¸í„°í˜ì´ìŠ¤
 public interface IDamageable
 {
-	public void TakeDamage(int attack);    // µ¥¹ÌÁö ÀÔ±â
+	public void TakeDamage(int attack, Vector2 attackDirection);    // ë°ë¯¸ì§€ ì…ê¸°
 }

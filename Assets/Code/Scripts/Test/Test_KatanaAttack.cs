@@ -135,7 +135,7 @@ public class Test_KatanaAttack : MonoBehaviour
             IDamageable damageable = enemyCollider.GetComponent<IDamageable>();
             if (damageable != null)
             {
-                damageable.TakeDamage(attackDamage); // 적에게 대미지 전송!
+                damageable.TakeDamage(attackDamage, direction.normalized); // 적에게 대미지 전송!
                 Debug.Log($"[물리 전투 타격] 적 스캔 완료! 대상: {enemyCollider.name}, 가한 대미지: {attackDamage}");
             }
         }

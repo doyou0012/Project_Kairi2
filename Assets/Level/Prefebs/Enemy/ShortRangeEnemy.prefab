@@ -244,3 +244,4 @@ MonoBehaviour:
   isRanged: 0
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
+  killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}

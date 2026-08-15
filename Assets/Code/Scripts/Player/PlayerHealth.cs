@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,10 +24,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 		slowMode = GetComponent<PlayerSlowMode>();
 	}
 
-	public void TakeDamage(int attack)
+	public void TakeDamage(int attack, Vector2 attackDirection)
 	{
 		return;		// DEBUG
-		if (movement.isDash) return;  // ´ë½¬ Áß ¹«Àû
+		if (movement.isDash) return;  // ëŒ€ì‰¬ ì¤‘ ë¬´ì 
 
 		GameManager.Instance.playerStatsRuntime.currentHP -= attack;
 

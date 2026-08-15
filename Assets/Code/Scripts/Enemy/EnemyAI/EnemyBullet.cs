@@ -1,17 +1,17 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 public class EnemyBullet : MonoBehaviour
 {
-    [Header("ÃÑ¾Ë ºñÇà ½ºÆå")]
+    [Header("ì´ì•Œ ë¹„í–‰ ìŠ¤í™")]
     public float speed = 10f;
     public float maxLifeTime = 5f;
 
     private Rigidbody2D rb;
     private int damageValue = 1;
 
-    // ¹æ¹ı BÀÇ ÇÙ½É: ÇÃ·¹ÀÌ¾î Ä®¿¡ Æ¨°Ü ³ª°¬´ÂÁö ¿©ºÎ¸¦ ÆÇº°ÇÏ´Â º¯¼ö
+    // ë°©ë²• Bì˜ í•µì‹¬: í”Œë ˆì´ì–´ ì¹¼ì— íŠ•ê²¨ ë‚˜ê°”ëŠ”ì§€ ì—¬ë¶€ë¥¼ íŒë³„í•˜ëŠ” ë³€ìˆ˜
     private bool isDeflected = false;
 
     private void Awake()
@@ -42,26 +42,26 @@ public class EnemyBullet : MonoBehaviour
     }
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾îÀÇ Ä® °ø°İ¿¡ ¸Â¾ÒÀ» ¶§, ÇÃ·¹ÀÌ¾î ½ºÅ©¸³Æ®·ÎºÎÅÍ °­Á¦ È£ÃâµÇ´Â ¹İ»ç ¿¬»ê ÇÔ¼öÀÔ´Ï´Ù.
+    /// í”Œë ˆì´ì–´ì˜ ì¹¼ ê³µê²©ì— ë§ì•˜ì„ ë•Œ, í”Œë ˆì´ì–´ ìŠ¤í¬ë¦½íŠ¸ë¡œë¶€í„° ê°•ì œ í˜¸ì¶œë˜ëŠ” ë°˜ì‚¬ ì—°ì‚° í•¨ìˆ˜ì…ë‹ˆë‹¤.
     /// </summary>
-    /// <param name="mousePosition">ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ ¸¶¿ì½º ¿ùµå ÁÂÇ¥</param>
+    /// <param name="mousePosition">í˜„ì¬ í”Œë ˆì´ì–´ì˜ ë§ˆìš°ìŠ¤ ì›”ë“œ ì¢Œí‘œ</param>
     public void Deflect(Vector3 mousePosition)
     {
-        // 1. Æ¨°Ü ³ª°£ »óÅÂ·Î ¼Ó¼ºÀ» ÀüÈ¯ÇÕ´Ï´Ù.
+        // 1. íŠ•ê²¨ ë‚˜ê°„ ìƒíƒœë¡œ ì†ì„±ì„ ì „í™˜í•©ë‹ˆë‹¤.
         isDeflected = true;
 
-        // 2. Á¶ÁØµÈ ¸¶¿ì½º ¹æÇâÀ¸·Î ³¯¾Æ°¡µµ·Ï »õ·Î¿î ºñÇà ¹æÇâ º¤ÅÍ¸¦ ¿¬»êÇÕ´Ï´Ù.
+        // 2. ì¡°ì¤€ëœ ë§ˆìš°ìŠ¤ ë°©í–¥ìœ¼ë¡œ ë‚ ì•„ê°€ë„ë¡ ìƒˆë¡œìš´ ë¹„í–‰ ë°©í–¥ ë²¡í„°ë¥¼ ì—°ì‚°í•©ë‹ˆë‹¤.
         Vector2 deflectDirection = (Vector2)(mousePosition - transform.position);
         deflectDirection.Normalize();
 
-        // 3. ÆĞ¸µÀÇ Äè°¨À» ³ôÀÌ±â À§ÇØ ºñÇà ¼Óµµ¸¦ ±âÁ¸ ¼Óµµº¸´Ù 1.5¹è ºü¸£°Ô Çâ»ó½ÃÅµ´Ï´Ù.
+        // 3. íŒ¨ë§ì˜ ì¾Œê°ì„ ë†’ì´ê¸° ìœ„í•´ ë¹„í–‰ ì†ë„ë¥¼ ê¸°ì¡´ ì†ë„ë³´ë‹¤ 1.5ë°° ë¹ ë¥´ê²Œ í–¥ìƒì‹œí‚µë‹ˆë‹¤.
         rb.linearVelocity = deflectDirection * (speed * 1.5f);
 
-        // 4. »õ·Î¿î ºñÇà º¤ÅÍ¿¡ ºÎÇÕÇÏ°Ô ÃÑ¾ËÀÇ 2D È¸Àü°¢À» Àç¼³Á¤ÇÕ´Ï´Ù.
+        // 4. ìƒˆë¡œìš´ ë¹„í–‰ ë²¡í„°ì— ë¶€í•©í•˜ê²Œ ì´ì•Œì˜ 2D íšŒì „ê°ì„ ì¬ì„¤ì •í•©ë‹ˆë‹¤.
         float angle = Mathf.Atan2(deflectDirection.y, deflectDirection.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        // 5. ÆĞ¸µµÇ¾úÀ½À» ½Ã°¢ÀûÀ¸·Î ¾Ë·ÁÁÖ±â À§ÇØ ÃÑ¾ËÀÇ »ö»óÀ» ¿¬ÇÑ Çª¸¥»ö(ÇÏ´Ã»ö)À¸·Î º¯°æÇÕ´Ï´Ù.
+        // 5. íŒ¨ë§ë˜ì—ˆìŒì„ ì‹œê°ì ìœ¼ë¡œ ì•Œë ¤ì£¼ê¸° ìœ„í•´ ì´ì•Œì˜ ìƒ‰ìƒì„ ì—°í•œ í‘¸ë¥¸ìƒ‰(í•˜ëŠ˜ìƒ‰)ìœ¼ë¡œ ë³€ê²½í•©ë‹ˆë‹¤.
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr != null)
         {
@@ -71,7 +71,7 @@ public class EnemyBullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // »óÈ² A: Á¤»ó »óÈ² (Àû±ºÀÌ ¹ß»çÇÏ¿© ¾ÆÁ÷ ÇÃ·¹ÀÌ¾î Ä®¿¡ ¸Â±â Àü)
+        // ìƒí™© A: ì •ìƒ ìƒí™© (ì êµ°ì´ ë°œì‚¬í•˜ì—¬ ì•„ì§ í”Œë ˆì´ì–´ ì¹¼ì— ë§ê¸° ì „)
         if (!isDeflected)
         {
             if (collision.CompareTag("Player"))
@@ -79,12 +79,12 @@ public class EnemyBullet : MonoBehaviour
                 IDamageable playerDamageable = collision.GetComponent<IDamageable>();
                 if (playerDamageable != null)
                 {
-                    playerDamageable.TakeDamage(damageValue);
+                    playerDamageable.TakeDamage(damageValue, rb.linearVelocity.normalized);
                 }
                 Destroy(gameObject);
             }
         }
-        // »óÈ² B: ÆĞ¸µ ¹İ»ç »óÈ² (ÇÃ·¹ÀÌ¾î°¡ ÃÄ³»¾î ÀûÀ» ÇâÇØ ¿ªÀ¸·Î ³¯¾Æ°¡´Â »óÅÂ)
+        // ìƒí™© B: íŒ¨ë§ ë°˜ì‚¬ ìƒí™© (í”Œë ˆì´ì–´ê°€ ì³ë‚´ì–´ ì ì„ í–¥í•´ ì—­ìœ¼ë¡œ ë‚ ì•„ê°€ëŠ” ìƒíƒœ)
         else
         {
             if (collision.CompareTag("Enemy"))
@@ -92,14 +92,14 @@ public class EnemyBullet : MonoBehaviour
                 IDamageable enemyDamageable = collision.GetComponent<IDamageable>();
                 if (enemyDamageable != null)
                 {
-                    // ¹İ»çµÈ ÅºÈ¯ÀÌ¹Ç·Î ÅëÄèÇÑ ¾×¼Ç º¸»óÀ¸·Î 2¹èÀÇ ÇÇÇØ·®À» Áİ´Ï´Ù.
-                    enemyDamageable.TakeDamage(damageValue * 2);
+                    // ë°˜ì‚¬ëœ íƒ„í™˜ì´ë¯€ë¡œ í†µì¾Œí•œ ì•¡ì…˜ ë³´ìƒìœ¼ë¡œ 2ë°°ì˜ í”¼í•´ëŸ‰ì„ ì¤ë‹ˆë‹¤.
+                    enemyDamageable.TakeDamage(damageValue * 2, rb.linearVelocity.normalized);
                 }
                 Destroy(gameObject);
             }
         }
 
-        // °øÅë: º® ÁöÇü µî¿¡ ´êÀ¸¸é ÅºÈ¯ Á¦°Å
+        // ê³µí†µ: ë²½ ì§€í˜• ë“±ì— ë‹¿ìœ¼ë©´ íƒ„í™˜ ì œê±°
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.CompareTag("Ground"))
         {
             Destroy(gameObject);

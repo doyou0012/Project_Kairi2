@@ -191,7 +191,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		foreach (RaycastHit2D hit in hits)
 		{
 			if (hit.transform.TryGetComponent<IDamageable>(out var damage))
-				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
+				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack, dir);
 
 			if (hit.transform.TryGetComponent<CrackObject>(out var obj))
 				obj.Crack();
