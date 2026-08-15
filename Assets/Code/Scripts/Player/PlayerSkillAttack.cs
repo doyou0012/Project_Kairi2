@@ -21,6 +21,12 @@ public class PlayerSkillAttack : MonoBehaviour
 	[Header("선 두께")]
 	[SerializeField] private float lineWidth = 0.05f;
 
+	[Header("스킬 쿨타임")]
+	[SerializeField] private float skillCooldown = 3f; // 쿨타임 설정 시간
+	[SerializeField] private PlayerCooldownUI cooldownUI; // 머리 위 UI 스크립트 연결용
+	private float cooldownTimer = 0f; // 현재 남은 쿨타임 계산용
+	public bool IsCooldown => cooldownTimer > 0f; // 쿨타임 중인지 판단
+
 	private Animator anim;
 	private GameObject DotObj;
 	private GameObject LineObj;
@@ -31,6 +37,22 @@ public class PlayerSkillAttack : MonoBehaviour
 	public bool isActive = false;
 	public bool canUseSkill = true;
 	public bool IsSkillAttacking { get; private set; }
+
+	private void Update()
+	{
+		if (cooldownTimer > 0f)
+		{
+			cooldownTimer -= Time.deltaTime;
+			if (cooldownUI != null)
+			{
+				cooldownUI.UpdateCooldown(cooldownTimer, skillCooldown);
+			}
+			if (cooldownTimer <= 0f && cooldownUI != null)
+			{
+				cooldownUI.ShowCooldown(false); // 쿨타임 끝나면 UI 숨김
+			}
+		}
+	}
 
 	private void Awake()
 	{
@@ -59,6 +81,9 @@ public class PlayerSkillAttack : MonoBehaviour
 
 	public void EnterSkill()
 	{
+		// 쿨타임 중이거나 스킬을 쓸 수 없는 상태면 실행하지 않음
+		if (IsCooldown || !canUseSkill) return;
+
 		GetComponent<PlayerMovement>().canMove = false;		// 움직임 제한
 		GetComponent<PlayerAttack>().canAttack = false;		// 공격 제한
 
@@ -139,7 +164,14 @@ public class PlayerSkillAttack : MonoBehaviour
 	// 스킬 사용
 	private IEnumerator SkillAttack()
 	{
+		// 스킬 쿨타임 작동 및 UI 활성화
+		cooldownTimer = skillCooldown;
+		if (cooldownUI != null)
+		{
+			cooldownUI.ShowCooldown(true);
+		}
 		IsSkillAttacking = true;
+
 		Vector2 targetPos = GetSkillTargetPosition(DotObj.transform.position);	// Dot 위치를 목표 위치로
 		Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
 
@@ -159,7 +191,7 @@ public class PlayerSkillAttack : MonoBehaviour
 		foreach (RaycastHit2D hit in hits)
 		{
 			if (hit.transform.TryGetComponent<IDamageable>(out var damage))
-				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack);
+				damage.TakeDamage(GameManager.Instance.playerStatsRuntime.attack, dir);
 
 			if (hit.transform.TryGetComponent<CrackObject>(out var obj))
 				obj.Crack();
@@ -249,13 +281,16 @@ public class PlayerSkillAttack : MonoBehaviour
 	// 마우스 뗌과 동시에 스킬 나가기 및 사용
 	public void ExitSkill()
 	{
+		// 조준 상태가 아니었거나(쿨타임 등으로 인해), 쿨타임 중이면 스킬 발사를 차단합니다.
+		if (!isActive || IsCooldown) return;
+
 		anim.Play("Dragon_Skill");   // 애니메이션
 
 		if (canUseSkill) StartCoroutine(SkillAttack());
 		isActive = false;
 		line.enabled = false;
 		SetActiveObj(false);
-		slowMode.ExitSlow();
+		slowMode.ExitSlow(false);
 
 		GetComponent<PlayerMovement>().canMove = true;
 		GetComponent<PlayerAttack>().canAttack = true;

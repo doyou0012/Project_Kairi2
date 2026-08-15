@@ -116,11 +116,17 @@ public class PlayerController : MonoBehaviour
 	{
 		if (GameManager.Instance.playerStatsRuntime.currentHP <= 0)
 			return;
-
 		if (val.isPressed)
+		{
+			// 쿨타임 중이면 아예 슬로우 시도를 막음
+			if (slowMode.IsCooldown) return;
 			slowMode.EnterSlow();
+		}
 		else
+		{
+			// 현재 슬로우 모드가 켜진 상태였을 때만 떼기(종료) 처리 작동
 			slowMode.ExitSlow();
+		}
 	}
 
 	private void OnCollisionEnter2D(Collision2D col)

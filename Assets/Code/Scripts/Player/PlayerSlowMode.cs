@@ -8,25 +8,51 @@ public class PlayerSlowMode : MonoBehaviour
 {
 	[Header("Audio Mixer")]
 	public AudioMixer mixer;
-	[Header("½½·Î¿ì ¹è°æ Panel")]
+	[Header("ìŠ¬ë¡œìš° ë°°ê²½ Panel")]
 	public GameObject panel;
-	//[Header("½½·Î¿ì °ÔÀÌÁö UI")]
+	//[Header("ìŠ¬ë¡œìš° ê²Œì´ì§€ UI")]
 	//public Slider slowGaugeSlider;
-	[Header("½½·Î¿ì ºñÀ²")]
+	[Header("ìŠ¬ë¡œìš° ë¹„ìœ¨")]
 	public const float slowFactor = 0.01f;
-	[Header("½½·Î¿ì °ÔÀÌÁö ÃÖ´ëÄ¡")]
+	[Header("ìŠ¬ë¡œìš° ê²Œì´ì§€ ìµœëŒ€ì¹˜")]
 	public float slowMaxGauge = 3f;
-	//[Header("½½·Î¿ì °ÔÀÌÁö ÇöÀçÄ¡")]
+	//[Header("ìŠ¬ë¡œìš° ê²Œì´ì§€ í˜„ìž¬ì¹˜")]
 	//public float slowGauge = 3f;
-	[Header("½½·Î¿ì °ÔÀÌÁö °¨¼Ò ¼Óµµ")]
+	[Header("ìŠ¬ë¡œìš° ê²Œì´ì§€ ê°ì†Œ ì†ë„")]
 	public float slowDecreaseRate = 1f;
-	[Header("½½·Î¿ì °ÔÀÌÁö È¸º¹ ¼Óµµ")]
+	[Header("ìŠ¬ë¡œìš° ê²Œì´ì§€ íšŒë³µ ì†ë„")]
 	public float slowRecoverRate = 0.5f;
-	[Header("½½·Î¿ì »óÅÂ ¿©ºÎ")]
+	[Header("ìŠ¬ë¡œìš° ìƒíƒœ ì—¬ë¶€")]
 	private bool isPlayerSlow = false;
 
-    private Silhouette solihoutte;  // ÀÜ»óÈ¿°ú
-	private float slowTime = 0.5f;  // ½½·Î¿ì Áö¼Ó ½Ã°£
+	[Header("ìŠ¬ë¡œìš° ì¿¨íƒ€ìž„")]
+	[SerializeField] private float slowCooldown = 5f; // ìŠ¬ë¡œìš° ìž¬ì‚¬ìš© ëŒ€ê¸°ì‹œê°„ (5ì´ˆ)
+	private float cooldownTimer = 0f; // ë‚¨ì€ ì¿¨íƒ€ìž„ íƒ€ì´ë¨¸
+	public bool IsCooldown => cooldownTimer > 0f; // í˜„ìž¬ ì¿¨íƒ€ìž„ ì¤‘ì¸ì§€ ì—¬ë¶€
+
+	[Header("ìŠ¬ë¡œìš° ì¿¨íƒ€ìž„ UI ì—°ë™")]
+	[SerializeField] private PlayerSlowCooldownUI slowCooldownUI; // ìŠ¬ë¡œìš° UI ìŠ¤í¬ë¦½íŠ¸ ì°¸ì¡°
+
+	private Silhouette solihoutte;  // ìž”ìƒíš¨ê³¼
+	private float slowTime = 0.5f;  // ìŠ¬ë¡œìš° ì§€ì† ì‹œê°„
+
+	private void Update()
+	{
+		if (cooldownTimer > 0f)
+		{
+			cooldownTimer -= Time.unscaledDeltaTime;
+			if (slowCooldownUI != null)
+			{
+				slowCooldownUI.UpdateCooldown(cooldownTimer, slowCooldown);
+			}
+
+			if (cooldownTimer <= 0f && slowCooldownUI != null)
+			{
+				slowCooldownUI.ShowCooldown(false); // ì¿¨íƒ€ìž„ì´ ëë‚˜ë©´ UI ìˆ¨ê¹€
+			}
+		}
+	}
+
 
 	private void Awake()
 	{
@@ -39,22 +65,23 @@ public class PlayerSlowMode : MonoBehaviour
 
 		//if (globalVolume == null)
 		//{
-		//	Debug.LogError("Global VolumeÀÌ ÇÒ´çµÇÁö ¾Ê¾ÒÀ½");
+		//	Debug.LogError("Global Volumeì´ í• ë‹¹ë˜ì§€ ì•Šì•˜ìŒ");
 		//	return;
 		//}
 
 		//if (!globalVolume.profile.TryGet(out colorAdjustments))
-		//	Debug.LogError("Volume Profile¿¡ ¾øÀ½");
+		//	Debug.LogError("Volume Profileì— ì—†ìŒ");
 		//if (!globalVolume.profile.TryGet(out bloom))
-		//	Debug.LogError("Volume Profile¿¡ ¾øÀ½");
+		//	Debug.LogError("Volume Profileì— ì—†ìŒ");
 	}
 
 	public void EnterSlow(float factor = slowFactor)
 	{
+		// ì¿¨íƒ€ìž„ ì¤‘ì´ë©´ ìŠ¬ë¡œìš° ëª¨ë“œë¥¼ ì‹¤í–‰í•˜ì§€ ì•Šê³  ë¦¬í„´
+		if (IsCooldown) return;
 		print($"slow duration: {factor}");
 		if (!isPlayerSlow)
 		{
-			// ½½·Î¿ì ÄÚ·çÆ¾ ½ÃÀÛ
 			isPlayerSlow = true;
 			panel?.SetActive(true);
 			StartSlow(factor);
@@ -64,56 +91,68 @@ public class PlayerSlowMode : MonoBehaviour
 
 	public void EnterOnlySlow(float factor = slowFactor)
 	{
+		// ì¿¨íƒ€ìž„ ì¤‘ì´ë©´ ì‹¤í–‰ ì°¨ë‹¨
+		if (IsCooldown) return;
 		if (!isPlayerSlow)
 		{
-			// ½½·Î¿ì ÄÚ·çÆ¾ ½ÃÀÛ
 			isPlayerSlow = true;
 			StartSlow(factor);
 			solihoutte.Active = true;
 		}
 	}
 
-	public void ExitSlow()
+	public void ExitSlow(bool triggerCooldown = true)
 	{
-		if(isPlayerSlow)
+		if (isPlayerSlow)
 		{
 			isPlayerSlow = false;
 			solihoutte.Active = false;
 			panel?.SetActive(false);
 			StopSlow();
+
+			if (triggerCooldown)
+			{
+				cooldownTimer = slowCooldown;
+
+				// [ì¶”ê°€] ì¿¨íƒ€ìž„ ìž‘ë™ì´ ì‹œìž‘ë˜ì—ˆìœ¼ë¯€ë¡œ UIë¥¼ í™”ë©´ì— ì¼­ë‹ˆë‹¤.
+				if (slowCooldownUI != null)
+				{
+					slowCooldownUI.ShowCooldown(true);
+				}
+			}
 		}
 	}
 
-	private void StartSlow(float factor)    // ½½·Î¿ì È¿°ú ½ÃÀÛ
+	private void StartSlow(float factor)    // ìŠ¬ë¡œìš° íš¨ê³¼ ì‹œìž‘
 	{
         Time.timeScale = factor;
 		Time.fixedDeltaTime = 0.02f * Time.timeScale;
-		mixer.SetFloat("MasterCutoff", 1000f);   // ¸Ô¸Ô
+		mixer.SetFloat("MasterCutoff", 1000f);   // ë¨¹ë¨¹
 	}
 
-	private void StopSlow()     // ½½·Î¿ì È¿°ú Á¾·á
+	private void StopSlow()     // ìŠ¬ë¡œìš° íš¨ê³¼ ì¢…ë£Œ
 	{
 		if (isPlayerSlow)
 			return;
-		Time.timeScale = 1f;            // ½Ã°£ ¿ø·¡´ë·Î
+		Time.timeScale = 1f;            // ì‹œê°„ ì›ëž˜ëŒ€ë¡œ
 		Time.fixedDeltaTime = 0.02f;
-		mixer.SetFloat("MasterCutoff", 22000f); // ¿ø·¡ ¼Ò¸®
-		solihoutte.DefaultSet();		// ½Ç·ç¿§ ±âº»»óÅÂ·Î º¯°æ
+		mixer.SetFloat("MasterCutoff", 22000f); // ì›ëž˜ ì†Œë¦¬
+		solihoutte.DefaultSet();		// ì‹¤ë£¨ì—£ ê¸°ë³¸ìƒíƒœë¡œ ë³€ê²½
 	}
 
-	public void EnterHitStop()		// ½Ã°£ ¸ØÃß±â
+	public void EnterHitStop()		// ì‹œê°„ ë©ˆì¶”ê¸°
 	{
 		Time.timeScale = 0f;
 		Time.fixedDeltaTime = 0f;
 	}
 
-	public void ExitHitStop()	// ¿ø·¡´ë·Î
+	public void ExitHitStop()	// ì›ëž˜ëŒ€ë¡œ
 	{
 		Time.timeScale = 1f;
 		Time.fixedDeltaTime = 1f;
 	}
 
-	//void UpdateSlowGauge()      // ½½·Î¿ì °ÔÀÌÁö ¾÷µ¥ÀÌÆ®
+	//void UpdateSlowGauge()      // ìŠ¬ë¡œìš° ê²Œì´ì§€ ì—…ë°ì´íŠ¸
 	//{
 	//	if (slowGaugeSlider == null) return;
 	//	if (isPlayerSlow)

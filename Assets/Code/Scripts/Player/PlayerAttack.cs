@@ -174,7 +174,7 @@ public class PlayerAttack : MonoBehaviour
 		{
 			if (hit.collider.TryGetComponent<IDamageable>(out IDamageable coll))
 			{
-				coll.TakeDamage(stats.attack);  // 공격력만큼 데미지
+				coll.TakeDamage(stats.attack, dir);  // 공격력만큼 데미지
 			}
 		}
 

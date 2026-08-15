@@ -1,4 +1,4 @@
-using UnityEngine; // 유니티 엔진의 기본 기능(MonoBehaviour, GameObject, Transform 등)을 사용하기 위한 네임스페이스입니다.
+﻿using UnityEngine; // 유니티 엔진의 기본 기능(MonoBehaviour, GameObject, Transform 등)을 사용하기 위한 네임스페이스입니다.
 using EnumType;    // 프로젝트 내 정의된 공용 열거형(예: KimEnemyState 등)을 참조하기 위한 네임스페이스입니다.
 using System.Collections.Generic; // FSM 상태 관리를 위해 Dictionary, List 등의 컬렉션을 사용하기 위한 네임스페이스입니다.
 
@@ -150,7 +150,29 @@ public class Enemy : MonoBehaviour, IDamageable
     /// 플레이어의 공격 판정 스크립트 등에서 호출되며, 적의 체력을 깎고 사망 상태로 전환합니다.
     /// </summary>
     /// <param name="attackDamage">피격 시 깎이게 될 데미지 양</param>
-    public void TakeDamage(int attackDamage)
+    [Header("Kill Slash Effect")]
+    [SerializeField] private GameObject killSlashEffectPrefab;
+    [SerializeField] private GameObject bloodEffectPrefab;
+    [SerializeField] private float bloodEffectOffset = 0.5f;
+
+    private void SpawnBloodEffect(Vector2 dir)
+    {
+        if (bloodEffectPrefab == null) return;
+        Vector3 spawnPosition = transform.position + (Vector3)(dir * bloodEffectOffset);
+        GameObject effect = Instantiate(bloodEffectPrefab, spawnPosition, Quaternion.identity);
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        effect.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    private void SpawnKillSlash(Vector2 dir)
+    {
+        if (killSlashEffectPrefab == null) return;
+        GameObject effect = Instantiate(killSlashEffectPrefab, transform.position, Quaternion.identity);
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        effect.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    public void TakeDamage(int attackDamage, Vector2 attackDirection)
     {
         // 1. [이미 사망한 상태에서의 중복 타격 방지 장치]
         // 적이 이미 죽어가거나 체력이 없는 상태에서 공격을 연속으로 받을 때 피격 사운드가 겹치거나 
@@ -164,7 +186,7 @@ public class Enemy : MonoBehaviour, IDamageable
         if (currentHP <= 0)
         {
             currentHP = 0;
-            ChangeState(KimEnemyState.DEAD);
+            SpawnKillSlash(attackDirection); SpawnBloodEffect(attackDirection); ChangeState(KimEnemyState.DEAD);
         }
     }
 
