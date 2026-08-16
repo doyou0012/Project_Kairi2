@@ -128,25 +128,4 @@ public class PlayerController : MonoBehaviour
 			slowMode.ExitSlow();
 		}
 	}
-
-	private void OnCollisionEnter2D(Collision2D col)
-	{
-		groundChecker.CheckGround();
-
-		if (col.transform.CompareTag(TagName.door))
-		{
-			collidedObj = col;
-		}
-	}
-
-	private void OnCollisionStay2D(Collision2D col)
-	{
-		groundChecker.CheckGround();
-	}
-
-	private void OnCollisionExit2D(Collision2D col)
-	{
-		if (col.transform.CompareTag(TagName.ground))
-			groundChecker.isGrounded = false;
-	}
 }

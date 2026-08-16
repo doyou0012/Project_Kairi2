@@ -56,7 +56,8 @@ public class PlayerMovement : MonoBehaviour
 	private float dashTimer;				// 대시 타이머
 	private Vector2 currDashVelocity;		// 대시 당시 수평 방향 대시 속도 벡터
 	private float dashDir;					// 대시 X방향 (-1: 좌, 1: 우)
-	private float dashCooldownTimer;		// 쿨타임 타이머
+	private float dashCooldownTimer;        // 쿨타임 타이머
+	private Transform collPlatform;
 
 	public Vector2 inputVec;
 
@@ -147,6 +148,16 @@ public class PlayerMovement : MonoBehaviour
 		else if(rigid.gravityScale == 0f)
 		{
 			rigid.gravityScale = defaultGravityScale;
+		}
+
+		// 원웨이 플랫폼에서 크라우치 시작 시 살짝 아래로 이동
+		if (isCrouchPressed && groundChecker.isGroundedOneway)
+		{
+			if (collPlatform.TryGetComponent<OneWayPlatformController>(out var oneWayP))
+			{
+				oneWayP.SetTriggerOn();
+				dashRequested = false;      // 대쉬 해제
+			}
 		}
 
 		Move();     // 이동
@@ -401,5 +412,13 @@ public class PlayerMovement : MonoBehaviour
 	{
 		if (dir.x > 0) transform.eulerAngles = Vector3.zero;
 		else if (dir.x < 0) transform.eulerAngles = new Vector3(0f, 180f, 0f);
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if(collision.transform.CompareTag(TagName.oneWayPlatform))
+		{
+			collPlatform = collision.transform;
+		}
 	}
 }

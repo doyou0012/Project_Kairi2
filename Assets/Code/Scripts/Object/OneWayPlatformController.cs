@@ -24,7 +24,13 @@ public class OneWayPlatformController : MonoBehaviour
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
+		print($"[OneWayPlatform LOG]: Trigger Exit");
 		if(collision.CompareTag(TagName.player))
 			colls[0].isTrigger = false;
+	}
+
+	public void SetTriggerOn()
+	{
+		colls[0].isTrigger = true;
 	}
 }

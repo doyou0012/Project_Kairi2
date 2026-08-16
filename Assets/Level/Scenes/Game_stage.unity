@@ -25531,7 +25531,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &512002130
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -25899,7 +25899,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &761551474
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -38079,7 +38079,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1081083109
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39388,7 +39388,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1763710991
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -48702,6 +48702,10 @@ PrefabInstance:
     - target: {fileID: 2900289651810484321, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4619951583103331045, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
+      propertyPath: m_Constraints
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6702859265878400548, guid: 01d1ed153d46b3d49b4e4980c3ffc402, type: 3}
       propertyPath: m_Name
