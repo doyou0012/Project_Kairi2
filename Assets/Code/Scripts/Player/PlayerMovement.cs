@@ -286,6 +286,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		rigid.linearVelocity = new Vector2(rigid.linearVelocityX, stats.jumpForce);
 		slopeJumpProtectionTimer = 0.2f;
+		if (groundChecker != null) groundChecker.ForceUnground();
 	}
 
 	private void ExecuteWallJump() // 벽 밀어내기 점프
@@ -306,6 +307,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 
 		IsWallSliding = false;
+		if (groundChecker != null) groundChecker.ForceUnground();
 	}
 
 	private void ExecuteWallPushJump() // 벽 밀기 수직 상승 점프
@@ -314,6 +316,7 @@ public class PlayerMovement : MonoBehaviour
 		IsWallJumping = true;
 		wallJumpTimer = wallJumpDuration;
 		slopeJumpProtectionTimer = 0.2f;
+		if (groundChecker != null) groundChecker.ForceUnground();
 	}
 
 	// 중력 추가 및 속도 제어
