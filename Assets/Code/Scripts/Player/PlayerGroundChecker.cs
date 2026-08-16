@@ -5,28 +5,37 @@ public class PlayerGroundChecker : MonoBehaviour
 {
 	[SerializeField] private Transform groundCheckObj;
 
-	[Header("°æ»ç Ã¼Å©")]
-	[Tooltip("ÇÃ·¹ÀÌ¾î°¡ ¿À¸¦ ¼ö ÀÖ´Â ¾ð´öÀÇ ÃÖ´ë °¢µµ")]
+	[Header("ê²½ì‚¬ ì²´í¬")]
+	[Tooltip("í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¼ ìˆ˜ ìžˆëŠ” ì–¸ë•ì˜ ìµœëŒ€ ê°ë„")]
 	[SerializeField] private float maxSlopeAngle = 60f;
 
 	public float checkRadius = 0.1f;
 	private LayerMask groundMask;
 	private Collider2D coll;
 
-	// ¹Ù´Ú Ã¼Å©
+	// ë°”ë‹¥ ì²´í¬
 	public bool isGrounded { get; set; }
 	public bool isGroundedOneway = false;
 	public bool isSlope;
 
-	// °æ»ç Ã¼Å©
-	private Vector2 slopeNormal;    // °æ»ç¸é ¹æÇâ Ã¼Å©
-	private float slopeAngle;       // °æ»ç °¢µµ
+	private float ungroundedTimer;
+	private const float ungroundedBufferTime = 0.08f; // ë¯¸ì„¸ íŠ•ê¹€ ë³´ì •ìš© ì‹œê°„ (ì•½ 5í”„ë ˆìž„)
+
+	public void ForceUnground()
+	{
+		isGrounded = false;
+		ungroundedTimer = ungroundedBufferTime;
+	}
+
+	// ê²½ì‚¬ ì²´í¬
+	private Vector2 slopeNormal;    // ê²½ì‚¬ë©´ ë°©í–¥ ì²´í¬
+	private float slopeAngle;       // ê²½ì‚¬ ê°ë„
 
 	public float distance;
 	public float angle;
 
-	[Header("¹Ù´ÚÃ¼Å© °¨Áö¼± ±æÀÌ")]
-	public float checkDist = 0.25f;		// ¹Ù´Ú Ã¼Å© °Å¸®
+	[Header("ë°”ë‹¥ì²´í¬ ê°ì§€ì„  ê¸¸ì´")]
+	public float checkDist = 0.25f;		// ë°”ë‹¥ ì²´í¬ ê±°ë¦¬
 
 	private void Awake()
     {
@@ -44,18 +53,18 @@ public class PlayerGroundChecker : MonoBehaviour
 		float offset = 0.05f;
 		float totalDistance = offset + checkDist;
 
-		// ¼¼ °³ÀÇ ¹üÀ§¸¦ ³ª´²¼­ Ã¼Å©
+		// ì„¸ ê°œì˜ ë²”ìœ„ë¥¼ ë‚˜ëˆ ì„œ ì²´í¬
 		float sideMargin = 0.02f;
 		Vector2 centerOrigin = new Vector2(coll.bounds.center.x, coll.bounds.min.y + offset);
 		Vector2 leftOrigin = new Vector2(coll.bounds.min.x + sideMargin, coll.bounds.min.y + offset);
 		Vector2 rightOrigin = new Vector2(coll.bounds.max.x + sideMargin, coll.bounds.min.y + offset);
 
-		// ¼¼ ¹üÀ§¿¡ ¸Â´Â ·¹ÀÌÄÉ½ºÆ® »ý¼º
+		// ì„¸ ë²”ìœ„ì— ë§žëŠ” ë ˆì´ì¼€ìŠ¤íŠ¸ ìƒì„±
 		RaycastHit2D hitCenter = Physics2D.Raycast(centerOrigin, Vector2.down, totalDistance, groundMask);
 		RaycastHit2D hitLeft = Physics2D.Raycast(leftOrigin, Vector2.down, totalDistance, groundMask);
 		RaycastHit2D hitRight = Physics2D.Raycast(rightOrigin, Vector2.down, totalDistance, groundMask);
 
-		// DEBUG: ·¹ÀÌÄÉ½ºÆ® È®ÀÎ¿ë
+		// DEBUG: ë ˆì´ì¼€ìŠ¤íŠ¸ í™•ì¸ìš©
 		Debug.DrawRay(centerOrigin, Vector2.down * totalDistance, hitCenter.collider != null ? Color.green : Color.red);
 		Debug.DrawRay(leftOrigin, Vector2.down * totalDistance, hitLeft.collider != null ? Color.green : Color.red);
 		Debug.DrawRay(rightOrigin, Vector2.down * totalDistance, hitRight.collider != null ? Color.green : Color.red);
@@ -68,8 +77,8 @@ public class PlayerGroundChecker : MonoBehaviour
 			slopeNormal = hit.normal;
 			slopeAngle = Vector2.Angle(Vector2.up, slopeNormal);
 
-			// »ç¼± ºø¸é Æ´»õ °ø°£(slopeAngle > 5)¿¡¼­´Â ¼ø°£ÀûÀ¸·Î ºØ ¶°¼­ Á¢Áö ÆÇÁ¤ÀÌ Ç®·Á ´ú´ú°Å¸®Áö ¾Ê°Ô 
-			// °¨Áö¼± °Å¸®¸¦ 0.35m·Î ³ÐÇôÁÖ°í, ÆòÁö¿¡¼­´Â 0.15m·Î ¾ö¹ÐÇÏ°Ô Á¼Çô ¹°¸® ¿ÀÂ÷¸¦ ÀÌÁß ½ºÄÉÀÏ¸µ
+			// ì‚¬ì„  ë¹—ë©´ í‹ˆìƒˆ ê³µê°„(slopeAngle > 5)ì—ì„œëŠ” ìˆœê°„ì ìœ¼ë¡œ ë¶• ë– ì„œ ì ‘ì§€ íŒì •ì´ í’€ë ¤ ëœëœê±°ë¦¬ì§€ ì•Šê²Œ 
+			// ê°ì§€ì„  ê±°ë¦¬ë¥¼ 0.35më¡œ ë„“í˜€ì£¼ê³ , í‰ì§€ì—ì„œëŠ” 0.15më¡œ ì—„ë°€í•˜ê²Œ ì¢í˜€ ë¬¼ë¦¬ ì˜¤ì°¨ë¥¼ ì´ì¤‘ ìŠ¤ì¼€ì¼ë§
 			float margin = (slopeAngle > 5f) ? 0.35f : 0.15f;
 			float strictLandingDist = offset + margin;
 
@@ -78,26 +87,39 @@ public class PlayerGroundChecker : MonoBehaviour
 				currGrounded = true;
 			}
 
-			// ¿À¸¦ ¼ö ÀÖ´Â °æ»ç¸éÀÌ¶ó¸é slope¸¦ ÂüÀ¸·Î
+			// ì˜¤ë¥¼ ìˆ˜ ìžˆëŠ” ê²½ì‚¬ë©´ì´ë¼ë©´ slopeë¥¼ ì°¸ìœ¼ë¡œ
 			if(slopeAngle > 0.05f && slopeAngle < maxSlopeAngle)
 			{
+				if (!isSlope)
+				{
+					Debug.Log($"[PlayerGroundChecker] ê²½ì‚¬ë©´ ê°ì§€ë¨! ê°ë„: {slopeAngle}ë„, ë…¸ë©€: {slopeNormal}");
+				}
 				isSlope = true;
 			}
 			else
 			{
 				isSlope = false;
-				slopeAngle = 0;		// °æ»ç °¢µµ ÃÊ±âÈ­
+				slopeAngle = 0;		// ê²½ì‚¬ ê°ë„ ì´ˆê¸°í™”
 			}
 		}
 		else
 		{
 			isSlope = false;
-			slopeAngle = 0;     // °æ»ç °¢µµ ÃÊ±âÈ­
+			slopeAngle = 0;     // ê²½ì‚¬ ê°ë„ ì´ˆê¸°í™”
 		}
 
-		if(isGrounded != currGrounded)
+		if (currGrounded)
 		{
-			isGrounded = currGrounded;
+			isGrounded = true;
+			ungroundedTimer = 0f;
+		}
+		else
+		{
+			ungroundedTimer += Time.deltaTime;
+			if (ungroundedTimer >= ungroundedBufferTime)
+			{
+				isGrounded = false;
+			}
 		}
 	}
 
