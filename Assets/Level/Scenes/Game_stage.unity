@@ -25727,6 +25727,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
+  bloodEffectPrefab: {fileID: 0}
+  bloodEffectOffset: 0.5
 --- !u!1 &656569148
 GameObject:
   m_ObjectHideFlags: 0
@@ -26093,6 +26095,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
+  bloodEffectPrefab: {fileID: 0}
+  bloodEffectOffset: 0.5
 --- !u!1001 &775357942
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38271,6 +38275,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
+  bloodEffectPrefab: {fileID: 0}
+  bloodEffectOffset: 0.5
 --- !u!4 &1228869464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 74315622514603887, guid: 6858137b06c43294fb5266cd5652e11b, type: 3}
@@ -39578,6 +39584,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 0}
   firePoint: {fileID: 0}
   killSlashEffectPrefab: {fileID: 512176611534266208, guid: 4dc4982b19c89e34b927995ff23a904e, type: 3}
+  bloodEffectPrefab: {fileID: 0}
+  bloodEffectOffset: 0.5
 --- !u!1 &1774902311
 GameObject:
   m_ObjectHideFlags: 0
@@ -39852,7 +39860,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1731096771355300355, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_Offset.y
-      value: -0.096203804
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1731096771355300355, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
+      propertyPath: m_EdgeRadius
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1731096771355300355, guid: 51f8fae8fe8e0814db374fadf0ad40d3, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
