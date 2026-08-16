@@ -65,7 +65,7 @@ namespace Globals
 		public const string climb		= "Player_Climb";
 		public const string climbSlide	= "Player_ClimbSlide";
 		public const string die			= "Player_Die";
-		public const string skill		= "Dragon_Skill";
+		public const string skill		= "Player_SkillAttack";
 	}
 
 	// 프리펩 이름 관련 클래스
