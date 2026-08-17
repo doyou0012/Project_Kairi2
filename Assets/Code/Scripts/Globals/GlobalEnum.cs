@@ -61,7 +61,13 @@ namespace EnumType
 	}
 
 
-
+	// 투척용 오브젝트 종류 정의
+	public enum ThrowableType
+	{
+		None = 0,
+		Vase,      // 꽃병
+		Bottle,    // 병
+	}
 
 
 

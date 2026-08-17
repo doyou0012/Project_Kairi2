@@ -174,6 +174,11 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(int attackDamage, Vector2 attackDirection)
     {
+        TakeDamage(attackDamage, attackDirection, true);
+    }
+
+    public void TakeDamage(int attackDamage, Vector2 attackDirection, bool isSlash)
+    {
         // 1. [이미 사망한 상태에서의 중복 타격 방지 장치]
         // 적이 이미 죽어가거나 체력이 없는 상태에서 공격을 연속으로 받을 때 피격 사운드가 겹치거나 
         // 사망 애니메이션이 중복으로 재생되는 등 오작동을 차단하기 위한 예외 방어코드입니다.
@@ -186,7 +191,11 @@ public class Enemy : MonoBehaviour, IDamageable
         if (currentHP <= 0)
         {
             currentHP = 0;
-            SpawnKillSlash(attackDirection); SpawnBloodEffect(attackDirection); ChangeState(KimEnemyState.DEAD);
+            if (isSlash)
+            {
+                SpawnKillSlash(attackDirection);
+            }
+            SpawnBloodEffect(attackDirection); ChangeState(KimEnemyState.DEAD);
         }
     }
 

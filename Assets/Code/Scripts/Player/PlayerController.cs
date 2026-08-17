@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
 
 	private Collision2D collidedObj;     // 플레이어와 상호작용 할 오브젝트
 
+	// 1. 클래스 상단 변수 선언부에 추가
+	private PlayerThrow throwModule;
+
 	private void Awake()
 	{
 		rigid = GetComponent<Rigidbody2D>();
@@ -23,6 +26,8 @@ public class PlayerController : MonoBehaviour
 		slowMode = GetComponent<PlayerSlowMode>();
 		groundChecker = GetComponent<PlayerGroundChecker>();
 		skillAttack = GetComponent<PlayerSkillAttack>();
+
+		throwModule = GetComponent<PlayerThrow>();
 	}
 
 	private void Update()
@@ -100,8 +105,20 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	// 3. 기존 OnSkillAttack 메서드를 아래와 같이 수정
 	private void OnSkillAttack(InputValue val)
 	{
+		// [우선순위 1] 플레이어가 아이템을 들고 있거나, 발 밑에 주울 수 있는 아이템이 있는 경우
+		if (throwModule != null && (throwModule.HasItem() || throwModule.HasNearbyPickup()))
+		{
+			// 줍기/던지기는 누르는 시점(Down)에 한 번만 즉시 처리되도록 합니다.
+			if (val.isPressed)
+			{
+				throwModule.ExecuteThrowAction();
+			}
+			return; // 기존 스킬이 발동하지 않도록 리턴 처리
+		}
+		// [우선순위 2] 들고 있는 아이템이나 주울 아이템이 없으면 기존 스킬 정상 발동
 		if (val.isPressed)
 		{
 			skillAttack.EnterSkill();
